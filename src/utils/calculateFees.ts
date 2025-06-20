@@ -1,16 +1,15 @@
 import {
-  LicenseFee,
+  GymDetails,
+  GymRoom, 
+  LicenseFee, 
+  MusicUseType,
   SESAC_TIERS,
   ASCAP_GROUP_CLASS_TIERS,
   ASCAP_SQUARE_FOOTAGE_TIERS,
-  ASCAP_SOCIAL_EVENTS_TIERS,
   ASCAP_CHAIN_DISCOUNTS,
   BMI_RATES,
   BMI_CHAIN_DISCOUNTS,
   GMR_ANNUAL_FEE,
-  GymDetails,
-  GymRoom,
-  MusicUseType
 } from '../types';
 
 function calculateAscapGroupClassFee(rooms: GymRoom[]): { fee: number; totalWeeklyParticipants: number } {
@@ -42,20 +41,34 @@ function calculateAscapGroupClassFee(rooms: GymRoom[]): { fee: number; totalWeek
   return { fee, totalWeeklyParticipants };
 }
 
-export function calculateSesacFee(numberOfLocations: number): LicenseFee {
+export function calculateSesacFee(gymDetails: GymDetails): LicenseFee {
+  if (gymDetails.isSoundtrackUser) {
+    return {
+      organizationName: 'SESAC',
+      feeBreakdown: [{ description: 'Not required for Soundtrack Your Brand users', amount: 0 }],
+      perLocationFee: 0,
+      message: 'Not required with Soundtrack'
+    };
+  }
+
   const tier = SESAC_TIERS.find(
-    (tier) => numberOfLocations >= tier.min && 
-    (tier.max === null || numberOfLocations <= tier.max)
+    (tier) =>
+      gymDetails.numberOfLocations >= tier.min &&
+      (tier.max === null || gymDetails.numberOfLocations <= tier.max)
   );
   
   if (!tier) {
-    throw new Error('Invalid number of locations');
+    return {
+      organizationName: 'SESAC',
+      feeBreakdown: [{ description: 'Number of locations out of range', amount: 0 }],
+      perLocationFee: 0
+    };
   }
-
+  
   return {
     organizationName: 'SESAC',
     feeBreakdown: [{
-      description: `Per location fee for ${numberOfLocations} location tier`,
+      description: `Per location fee for ${gymDetails.numberOfLocations} location tier`,
       amount: tier.feePerLocation
     }],
     perLocationFee: tier.feePerLocation
@@ -63,26 +76,34 @@ export function calculateSesacFee(numberOfLocations: number): LicenseFee {
 }
 
 export function calculateAscapFee(gymDetails: GymDetails): LicenseFee {
-  const feeBreakdown = [];
-  let totalFee = 0;
+  const { numberOfLocations, rooms, squareFootage, musicUseTypes, isHfaMember } = gymDetails;
+  
+  const feeBreakdown: { description: string, amount: number }[] = [];
+  let baseFee = 0;
 
   // 1. Group Classes Fee (if applicable)
-  if (gymDetails.musicUseTypes.includes('group')) {
-    const groupClassResult = calculateAscapGroupClassFee(gymDetails.rooms);
+  if (musicUseTypes.includes('group')) {
+    const groupClassResult = calculateAscapGroupClassFee(rooms);
     if (groupClassResult.fee > 0) {
+      let description = `${groupClassResult.totalWeeklyParticipants} participant capacity (Group Fitness Classes`;
+      if (musicUseTypes.includes('ambient')) {
+        description += ' – covers ambient use';
+      }
+      description += ')';
+
       feeBreakdown.push({
-        description: `Group Classes Fee (${groupClassResult.totalWeeklyParticipants} weekly participants)`,
+        description: description,
         amount: groupClassResult.fee
       });
-      totalFee += groupClassResult.fee;
+      baseFee += groupClassResult.fee;
     }
   }
 
-  // 2. Ambient Uses Fee (if applicable)
-  if (gymDetails.musicUseTypes.includes('ambient') && gymDetails.squareFootage > 0) {
+  // 2. Ambient Uses Fee (if applicable, and group fitness is not)
+  if (musicUseTypes.includes('ambient') && !musicUseTypes.includes('group') && squareFootage > 0) {
     const squareFootageTier = ASCAP_SQUARE_FOOTAGE_TIERS.find(
-      (tier) => gymDetails.squareFootage >= tier.min &&
-      (tier.max === null || gymDetails.squareFootage <= tier.max)
+      (tier) => squareFootage >= tier.min &&
+      (tier.max === null || squareFootage <= tier.max)
     );
 
     if (squareFootageTier) {
@@ -90,56 +111,58 @@ export function calculateAscapFee(gymDetails: GymDetails): LicenseFee {
         description: 'Ambient Uses Fee',
         amount: squareFootageTier.fee
       });
-      totalFee += squareFootageTier.fee;
+      baseFee += squareFootageTier.fee;
     }
   }
 
   // 3. Apply Chain Discount if applicable
-  if (gymDetails.numberOfLocations >= 10) {
+  if (numberOfLocations >= 10) {
     const chainDiscount = ASCAP_CHAIN_DISCOUNTS.find(
-      (tier) => gymDetails.numberOfLocations >= tier.min &&
-      (tier.max === null || gymDetails.numberOfLocations <= tier.max)
+      (tier) => numberOfLocations >= tier.min &&
+      (tier.max === null || numberOfLocations <= tier.max)
     );
 
     if (chainDiscount) {
-      const discountAmount = totalFee * (chainDiscount.discountPercentage / 100);
+      const discountAmount = baseFee * (chainDiscount.discountPercentage / 100);
       feeBreakdown.push({
         description: `Chain Discount (${chainDiscount.discountPercentage}%)`,
         amount: -discountAmount
       });
-      totalFee -= discountAmount;
+      baseFee -= discountAmount;
     }
   }
 
   // 4. Apply HFAA Discount if applicable
-  if (gymDetails.isHfaaMember) {
-    const hfaaDiscount = totalFee * 0.05; // 5% discount
+  if (isHfaMember) {
+    const hfaaDiscount = baseFee * 0.05; // 5% discount
     feeBreakdown.push({
       description: 'HFAA Member Discount (5%)',
       amount: -hfaaDiscount
     });
-    totalFee -= hfaaDiscount;
+    baseFee -= hfaaDiscount;
   }
 
   return {
     organizationName: 'ASCAP',
     feeBreakdown,
-    perLocationFee: totalFee
+    perLocationFee: baseFee
   };
 }
 
 export function calculateBmiFee(gymDetails: GymDetails): LicenseFee {
+  const { numberOfLocations, totalMembers, musicUseTypes, isHfaMember } = gymDetails;
+  
   // Get the highest rate based on selected music use types
   const rates = {
     group: BMI_RATES.groupFitnessClasses,
     ambient: BMI_RATES.ambientMusic
   };
 
-  const applicableRates = gymDetails.musicUseTypes
+  const applicableRates = musicUseTypes
     .map(type => rates[type as keyof typeof rates]);
 
   const rate = Math.max(...applicableRates, 0);
-  const calculatedFee = rate * gymDetails.totalMembers;
+  const calculatedFee = rate * totalMembers;
   
   // Apply minimum and maximum constraints
   let perLocationFee = Math.max(BMI_RATES.minimumFee, calculatedFee);
@@ -147,7 +170,7 @@ export function calculateBmiFee(gymDetails: GymDetails): LicenseFee {
 
   const feeBreakdown = [
     {
-      description: `${gymDetails.totalMembers} members @ $${rate.toFixed(4)} per member (${
+      description: `${totalMembers} members @ $${rate.toFixed(4)} per member (${
         rate === BMI_RATES.groupFitnessClasses ? 'Group Fitness Classes' :
         rate === BMI_RATES.ambientMusic ? 'Ambient Music' : 'No music type selected'
       })`,
@@ -158,30 +181,30 @@ export function calculateBmiFee(gymDetails: GymDetails): LicenseFee {
   // Add note about minimum/maximum adjustment if applicable
   if (calculatedFee < BMI_RATES.minimumFee) {
     feeBreakdown.push({
-      description: 'Adjusted to minimum fee',
+      description: `Adjusted to minimum fee ($${BMI_RATES.minimumFee} minimum applies)`,
       amount: BMI_RATES.minimumFee - calculatedFee
     });
   } else if (calculatedFee > BMI_RATES.maximumFee) {
     feeBreakdown.push({
-      description: 'Adjusted to maximum fee',
+      description: `Adjusted to maximum fee ($${BMI_RATES.maximumFee} maximum applies)`,
       amount: BMI_RATES.maximumFee - calculatedFee
     });
   }
 
-  // Apply HFAA Member Discount (5%)
-  if (gymDetails.isHfaaMember) {
-    const hfaaDiscount = perLocationFee * 0.05;
+  // Apply HFA Member Discount (5%)
+  if (isHfaMember) {
+    const discountAmount = perLocationFee * 0.05;
     feeBreakdown.push({
-      description: 'HFAA Member Discount (5%)',
-      amount: -hfaaDiscount
+      description: 'HFA Member Discount (5%)',
+      amount: -discountAmount
     });
-    perLocationFee -= hfaaDiscount;
+    perLocationFee -= discountAmount;
   }
 
   // Apply Chain Discount
   const chainDiscount = BMI_CHAIN_DISCOUNTS.find(
-    (tier) => gymDetails.numberOfLocations >= tier.min &&
-    (tier.max === null || gymDetails.numberOfLocations <= tier.max)
+    (tier) => numberOfLocations >= tier.min &&
+    (tier.max === null || numberOfLocations <= tier.max)
   );
 
   if (chainDiscount && chainDiscount.discountPercentage > 0) {
@@ -213,7 +236,7 @@ export function calculateGmrFee(numberOfLocations: number): LicenseFee {
 
 export function calculateTotalFees(gymDetails: GymDetails): LicenseFee[] {
   return [
-    calculateSesacFee(gymDetails.numberOfLocations),
+    calculateSesacFee(gymDetails),
     calculateAscapFee(gymDetails),
     calculateBmiFee(gymDetails),
     calculateGmrFee(gymDetails.numberOfLocations)

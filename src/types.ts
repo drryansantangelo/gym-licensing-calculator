@@ -5,6 +5,7 @@ export interface LicenseFee {
     amount: number;
   }[];
   perLocationFee: number;
+  message?: string;
 }
 
 export interface GymRoom {
@@ -20,7 +21,8 @@ export interface GymDetails {
   rooms: GymRoom[];
   squareFootage: number;
   musicUseTypes: MusicUseType[];
-  isHfaaMember: boolean;
+  isHfaMember: boolean;
+  isSoundtrackUser: boolean;
 }
 
 export interface SesacTier {

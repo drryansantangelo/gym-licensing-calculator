@@ -10,7 +10,8 @@ const initialGymDetails: GymDetails = {
   rooms: [],
   squareFootage: 0,
   musicUseTypes: [],
-  isHfaaMember: false,
+  isHfaMember: false,
+  isSoundtrackUser: false,
 };
 
 const musicUseOptions = [
@@ -236,13 +237,25 @@ function App() {
               <div className="flex items-center">
                 <input
                   type="checkbox"
-                  name="isHfaaMember"
-                  checked={gymDetails.isHfaaMember}
+                  name="isHfaMember"
+                  checked={gymDetails.isHfaMember}
                   onChange={handleInputChange}
                   className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                 />
                 <label className="ml-2 block text-sm text-gray-700">
                   Health & Fitness Association (HFA) Member (5% discount)
+                </label>
+              </div>
+              <div className="flex items-center mt-4">
+                <input
+                  type="checkbox"
+                  name="isSoundtrackUser"
+                  checked={gymDetails.isSoundtrackUser}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                />
+                <label className="ml-2 block text-sm text-gray-700">
+                  Are you a Soundtrack Your Brand user? (SESAC license not required)
                 </label>
               </div>
             </div>
@@ -271,24 +284,36 @@ function App() {
               <div key={fee.organizationName} className="mb-6 last:mb-0">
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   {fee.organizationName}
-                  {fee.organizationName === 'GMR' && (
+                  {fee.message && (
                     <span className="text-sm font-normal text-gray-500 ml-2">
-                      (Estimated - requires custom negotiation)
+                      ({fee.message})
                     </span>
                   )}
                 </h3>
                 <div className="space-y-1">
-                  {fee.feeBreakdown.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span className="text-gray-600">{item.description}</span>
-                      <span className={item.amount < 0 ? 'text-green-600' : 'text-gray-900'}>
-                        ${Math.abs(item.amount).toFixed(2)}
-                      </span>
-                    </div>
-                  ))}
+                  {fee.feeBreakdown.map((item, index) => {
+                    const isDiscount = item.description.includes('Discount');
+                    const isMaxAdj = item.description.includes('maximum applies');
+                    const isMinAdj = item.description.includes('minimum applies');
+                    
+                    const textColor = (isDiscount || isMinAdj || isMaxAdj) ? 'text-green-600' : 'text-gray-900';
+                    
+                    const amountText = (isDiscount || isMaxAdj)
+                      ? `($${Math.abs(item.amount).toFixed(2)})`
+                      : `$${item.amount.toFixed(2)}`;
+
+                    return (
+                      <div key={index} className="flex justify-between text-sm">
+                        <span className="text-gray-600">{item.description}</span>
+                        <span className={textColor}>
+                          {amountText}
+                        </span>
+                      </div>
+                    );
+                  })}
                   <div className="flex justify-between text-sm font-semibold pt-2 border-t">
                     <span>Per Location {fee.organizationName} Fee</span>
-                    <span>${fee.perLocationFee.toFixed(2)}</span>
+                    <span className="font-bold">${fee.perLocationFee.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
