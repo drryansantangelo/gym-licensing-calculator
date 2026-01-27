@@ -99,7 +99,7 @@ export const BMI_RATES = {
 } as const;
 
 // Annual fee (estimate for custom-negotiated license)
-export const GMR_ANNUAL_FEE = 500;
+export const GMR_ANNUAL_FEE = 650;
 
 // BMI Chain Discount Tiers
 export const BMI_CHAIN_DISCOUNTS = [

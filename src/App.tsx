@@ -85,7 +85,7 @@ function App() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Gym Music Licensing Calculator
+            2026 Gym Music Licensing Fee Calculator
           </h1>
           <img 
             src="/dynamic-media-logo.png" 
