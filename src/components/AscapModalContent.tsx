@@ -19,25 +19,41 @@ const tableData = {
 
 const ModalContent = () => {
   return (
-    <div className="text-sm text-gray-700 space-y-4">
+    <div className="text-sm text-gray-700 space-y-6">
+      {/* Educational Introduction */}
+      <div className="space-y-3">
+        <p style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
+          ASCAP (American Society of Composers, Authors and Publishers) is a U.S. performing rights organization that licenses public performance rights for musical works and distributes royalties to songwriters and publishers.
+        </p>
+        <p style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
+          Gyms typically need an ASCAP license when music is played in public areas or during instructor-led fitness classes.
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div style={{ borderTop: '2px solid var(--dm-border)', paddingTop: '1.5rem' }}>
+        <h4 className="font-semibold mb-3" style={{ color: 'var(--dm-text-primary)' }}>How this fee is calculated</h4>
+      </div>
+
+      {/* Calculation Details */}
       <p>
         ASCAP bases its license fee on different categories of use, with group classes as the primary factor. The model uses capacity, square footage, and optional features like virtual classes and social events.
       </p>
       
       <div className="space-y-3">
-        <h4 className="font-bold text-gray-800">🧍‍♀️ Group Fitness Classes</h4>
+        <h4 className="font-bold text-gray-800">Group Fitness Classes</h4>
         <p>Calculated using weekly participant capacity: (# of classes per week × room capacity for each room or pool)</p>
         <Table headers={['Total Weekly Participants', 'Annual Fee']} data={tableData.groupFitness} />
       </div>
 
       <div className="space-y-3">
-        <h4 className="font-bold text-gray-800">🔈 Ambient Music</h4>
+        <h4 className="font-bold text-gray-800">Ambient Music</h4>
         <p>Charged only if Group Fitness is not selected.</p>
         <Table headers={['Square Footage', 'Annual Fee']} data={tableData.ambient} />
       </div>
 
-      <p className="font-semibold bg-blue-50 p-3 rounded-lg">
-        ✅ If Group Fitness Classes is selected, ambient use is included at no additional charge.
+      <p className="font-semibold p-3 rounded-lg" style={{ backgroundColor: 'var(--dm-primary-light)', color: 'var(--dm-text-primary)' }}>
+        If Group Fitness Classes is selected, ambient use is included at no additional charge.
       </p>
     </div>
   );
