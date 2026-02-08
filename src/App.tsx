@@ -362,178 +362,183 @@ function App() {
               )}
             </div>
             
-            <div className="pt-5 border-t" style={{ borderColor: 'var(--dm-border)' }}>
-              <p className="text-sm font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                Tell us about your gym
-              </p>
-              <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)' }}>
-                PRO licensing fees are based on your facility size, membership, and how you use music.
-              </p>
-              
-              <div className={`grid gap-4 ${gymDetails.musicUseTypes.includes('ambient') ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                <div>
-                  <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                    Locations <span style={{ color: '#DC2626' }}>*</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="numberOfLocations"
-                    min="1"
-                    step="1"
-                    placeholder="e.g., 1"
-                    value={gymDetails.numberOfLocations || ''}
-                    onChange={handleInputChange}
-                    className={`input-field w-full ${
-                      validationErrors.has('numberOfLocations') ? 'border-red-500' : ''
-                    }`}
-                    required
-                  />
-                  {validationErrors.has('numberOfLocations') && (
-                    <p className="text-red-600 text-xs mt-1">Required</p>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                    Members <span style={{ color: '#DC2626' }}>*</span>
-                  </label>
-                  <input
-                    type="number"
-                    name="totalMembers"
-                    min="1"
-                    step="1"
-                    placeholder="e.g., 1000"
-                    value={gymDetails.totalMembers || ''}
-                    onChange={handleInputChange}
-                    className={`input-field w-full ${
-                      validationErrors.has('totalMembers') ? 'border-red-500' : ''
-                    }`}
-                    required
-                  />
-                  {validationErrors.has('totalMembers') && (
-                    <p className="text-red-600 text-xs mt-1">Required</p>
-                  )}
+            {/* Gym details — revealed after music type is selected */}
+            {gymDetails.musicUseTypes.length > 0 && (
+              <>
+                <div className="pt-5 border-t animate-fadeIn" style={{ borderColor: 'var(--dm-border)' }}>
+                  <p className="text-sm font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+                    Tell us about your gym
+                  </p>
+                  <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)' }}>
+                    PRO licensing fees are based on your facility size, membership, and how you use music.
+                  </p>
+                  
+                  <div className={`grid gap-4 ${gymDetails.musicUseTypes.includes('ambient') ? 'grid-cols-3' : 'grid-cols-2'}`}>
+                    <div>
+                      <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+                        Locations <span style={{ color: '#DC2626' }}>*</span>
+                      </label>
+                      <input
+                        type="number"
+                        name="numberOfLocations"
+                        min="1"
+                        step="1"
+                        placeholder="e.g., 1"
+                        value={gymDetails.numberOfLocations || ''}
+                        onChange={handleInputChange}
+                        className={`input-field w-full ${
+                          validationErrors.has('numberOfLocations') ? 'border-red-500' : ''
+                        }`}
+                        required
+                      />
+                      {validationErrors.has('numberOfLocations') && (
+                        <p className="text-red-600 text-xs mt-1">Required</p>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+                        Members <span style={{ color: '#DC2626' }}>*</span>
+                      </label>
+                      <input
+                        type="number"
+                        name="totalMembers"
+                        min="1"
+                        step="1"
+                        placeholder="e.g., 1000"
+                        value={gymDetails.totalMembers || ''}
+                        onChange={handleInputChange}
+                        className={`input-field w-full ${
+                          validationErrors.has('totalMembers') ? 'border-red-500' : ''
+                        }`}
+                        required
+                      />
+                      {validationErrors.has('totalMembers') && (
+                        <p className="text-red-600 text-xs mt-1">Required</p>
+                      )}
+                    </div>
+
+                    {gymDetails.musicUseTypes.includes('ambient') && (
+                      <div className="transition-all duration-300 ease-in-out">
+                        <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+                          Sq. Footage <span style={{ color: '#DC2626' }}>*</span>
+                        </label>
+                        <input
+                          type="number"
+                          name="squareFootage"
+                          min="1"
+                          step="1"
+                          placeholder="e.g., 5000"
+                          value={gymDetails.squareFootage || ''}
+                          onChange={handleInputChange}
+                          className={`input-field w-full ${
+                            validationErrors.has('squareFootage') ? 'border-red-500' : ''
+                          }`}
+                          required
+                        />
+                        {validationErrors.has('squareFootage') && (
+                          <p className="text-red-600 text-xs mt-1">Required</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {gymDetails.musicUseTypes.includes('ambient') && (
-                  <div className="transition-all duration-300 ease-in-out">
-                    <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                      Sq. Footage <span style={{ color: '#DC2626' }}>*</span>
-                    </label>
-                    <input
-                      type="number"
-                      name="squareFootage"
-                      min="1"
-                      step="1"
-                      placeholder="e.g., 5000"
-                      value={gymDetails.squareFootage || ''}
-                      onChange={handleInputChange}
-                      className={`input-field w-full ${
-                        validationErrors.has('squareFootage') ? 'border-red-500' : ''
-                      }`}
-                      required
-                    />
-                    {validationErrors.has('squareFootage') && (
-                      <p className="text-red-600 text-xs mt-1">Required</p>
+                {gymDetails.musicUseTypes.includes('group') && (
+                  <div className={`pt-5 border-t animate-fadeIn ${validationErrors.has('groupFitnessRooms') ? 'bg-red-50 border-red-500' : ''}`} style={{ borderColor: 'var(--dm-border)' }}>
+                    <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: 'var(--dm-text-primary)' }}>
+                      Group Fitness Rooms <span style={{ color: '#DC2626' }}>*</span>
+                      <span className="relative group">
+                        <span className="text-gray-400 hover:text-gray-600 cursor-help text-sm" title="Enter details for rooms with instructor-led classes">ⓘ</span>
+                      </span>
+                    </h3>
+                    <div className="space-y-3">
+                      {rooms.map((room, index) => (
+                        <div key={index} className="rounded-md p-3" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-medium" style={{ color: 'var(--dm-text-primary)', minWidth: '60px' }}>
+                              Room {index + 1}:
+                            </span>
+                            <div className="flex-1 flex items-center gap-2">
+                              <input
+                                type="number"
+                                name={`room-${index}-classesPerWeek`}
+                                min="1"
+                                step="1"
+                                placeholder="10"
+                                value={room.classesPerWeek || ''}
+                                onChange={(e) => handleRoomChange(index, 'classesPerWeek', e.target.value)}
+                                className={`input-field w-20 ${
+                                  validationErrors.has(`room-${index}-classesPerWeek`) ? 'border-red-500' : ''
+                                }`}
+                              />
+                              <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>classes/week</span>
+                            </div>
+                            <div className="flex-1 flex items-center gap-2">
+                              <input
+                                type="number"
+                                name={`room-${index}-classCapacity`}
+                                min="1"
+                                step="1"
+                                placeholder="25"
+                                value={room.classCapacity || ''}
+                                onChange={(e) => handleRoomChange(index, 'classCapacity', e.target.value)}
+                                className={`input-field w-20 ${
+                                  validationErrors.has(`room-${index}-classCapacity`) ? 'border-red-500' : ''
+                                }`}
+                              />
+                              <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>capacity</span>
+                            </div>
+                            {rooms.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveRoom(index)}
+                                className="text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                                style={{ color: '#DC2626' }}
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={handleAddRoom}
+                        className="text-sm font-semibold px-4 py-2 rounded transition-colors"
+                        style={{ color: 'var(--dm-primary)', border: '1px dashed var(--dm-primary)' }}
+                      >
+                        + Add another room
+                      </button>
+                    </div>
+                    {validationErrors.has('groupFitnessRooms') && (
+                      <p className="text-red-600 text-sm mt-2">At least one group fitness room is required</p>
                     )}
                   </div>
                 )}
-              </div>
-            </div>
-
-            {gymDetails.musicUseTypes.includes('group') && (
-              <div className={`pt-5 border-t ${validationErrors.has('groupFitnessRooms') ? 'bg-red-50 border-red-500' : ''}`} style={{ borderColor: 'var(--dm-border)' }}>
-                <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: 'var(--dm-text-primary)' }}>
-                  Group Fitness Rooms <span style={{ color: '#DC2626' }}>*</span>
-                  <span className="relative group">
-                    <span className="text-gray-400 hover:text-gray-600 cursor-help text-sm" title="Enter details for rooms with instructor-led classes">ⓘ</span>
-                  </span>
-                </h3>
-                <div className="space-y-3">
-                  {rooms.map((room, index) => (
-                    <div key={index} className="rounded-md p-3" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium" style={{ color: 'var(--dm-text-primary)', minWidth: '60px' }}>
-                          Room {index + 1}:
+                
+                <div className="pt-4 border-t animate-fadeIn" style={{ borderColor: 'var(--dm-border)' }}>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="isHfaMember"
+                      checked={gymDetails.isHfaMember}
+                      onChange={handleInputChange}
+                      className="checkbox-brand"
+                    />
+                    <label className="ml-2 text-sm flex items-center gap-1" style={{ color: 'var(--dm-text-secondary)' }}>
+                      Health & Fitness Association (HFA) Member
+                      <span className="relative group">
+                        <span className="text-gray-400 hover:text-gray-600 cursor-help text-xs">ⓘ</span>
+                        <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                          HFA members may receive discounts on certain PRO fees.
                         </span>
-                        <div className="flex-1 flex items-center gap-2">
-                          <input
-                            type="number"
-                            name={`room-${index}-classesPerWeek`}
-                            min="1"
-                            step="1"
-                            placeholder="10"
-                            value={room.classesPerWeek || ''}
-                            onChange={(e) => handleRoomChange(index, 'classesPerWeek', e.target.value)}
-                            className={`input-field w-20 ${
-                              validationErrors.has(`room-${index}-classesPerWeek`) ? 'border-red-500' : ''
-                            }`}
-                          />
-                          <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>classes/week</span>
-                        </div>
-                        <div className="flex-1 flex items-center gap-2">
-                          <input
-                            type="number"
-                            name={`room-${index}-classCapacity`}
-                            min="1"
-                            step="1"
-                            placeholder="25"
-                            value={room.classCapacity || ''}
-                            onChange={(e) => handleRoomChange(index, 'classCapacity', e.target.value)}
-                            className={`input-field w-20 ${
-                              validationErrors.has(`room-${index}-classCapacity`) ? 'border-red-500' : ''
-                            }`}
-                          />
-                          <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>capacity</span>
-                        </div>
-                        {rooms.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveRoom(index)}
-                            className="text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
-                            style={{ color: '#DC2626' }}
-                          >
-                            ✕
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={handleAddRoom}
-                    className="text-sm font-semibold px-4 py-2 rounded transition-colors"
-                    style={{ color: 'var(--dm-primary)', border: '1px dashed var(--dm-primary)' }}
-                  >
-                    + Add another room
-                  </button>
+                      </span>
+                    </label>
+                  </div>
                 </div>
-                {validationErrors.has('groupFitnessRooms') && (
-                  <p className="text-red-600 text-sm mt-2">At least one group fitness room is required</p>
-                )}
-              </div>
+              </>
             )}
-            
-            <div className="pt-4 border-t" style={{ borderColor: 'var(--dm-border)' }}>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="isHfaMember"
-                  checked={gymDetails.isHfaMember}
-                  onChange={handleInputChange}
-                  className="checkbox-brand"
-                />
-                <label className="ml-2 text-sm flex items-center gap-1" style={{ color: 'var(--dm-text-secondary)' }}>
-                  Health & Fitness Association (HFA) Member
-                  <span className="relative group">
-                    <span className="text-gray-400 hover:text-gray-600 cursor-help text-xs">ⓘ</span>
-                    <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                      HFA members may receive discounts on certain PRO fees.
-                    </span>
-                  </span>
-                </label>
-              </div>
-            </div>
           </div>
           
           <div className="mt-6">
