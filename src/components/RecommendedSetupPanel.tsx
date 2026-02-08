@@ -46,71 +46,71 @@ export default function RecommendedSetupPanel({
           Based on your gym's details, here's everything you'd get — music platform, licensing, and compliance — in one setup.
         </p>
 
-        <div className="card p-5 mb-5">
+        <div className="card p-6 mb-5">
           {/* Ambient Music Section - Primary */}
-          <div className={hasInstructorLed ? "pb-5 mb-5" : ""} style={hasInstructorLed ? { borderBottom: '2px solid var(--dm-border)' } : {}}>
-            <div className="flex items-baseline justify-between mb-3 gap-2">
+          <div className={hasInstructorLed ? "pb-6 mb-6" : ""} style={hasInstructorLed ? { borderBottom: '2px solid var(--dm-border)' } : {}}>
+            <div className="flex items-start justify-between mb-1 gap-4">
               <h3 className="text-lg font-bold" style={{ color: 'var(--dm-text-primary)' }}>
                 Soundtrack by Dynamic Media
               </h3>
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 text-right">
                 <span className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>starting at </span>
                 <span className="text-xl font-bold" style={{ color: 'var(--dm-text-primary)' }}>
                   ${monthlyPrice}/mo
                 </span>
               </div>
             </div>
-            <p className="text-xs mb-1" style={{ color: 'var(--dm-text-muted)' }}>
+            <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)', letterSpacing: '0.02em' }}>
               per location · month to month · cancel anytime
             </p>
             
-            <p className="text-sm font-medium mb-3 mt-3" style={{ color: 'var(--dm-text-primary)', lineHeight: '1.5' }}>
+            <p className="text-sm font-medium mb-5" style={{ color: 'var(--dm-text-primary)', lineHeight: '1.6' }}>
               Background music — fully covered. One subscription includes your music platform and all licensing.
             </p>
             
-            <div className="space-y-1.5 mb-3">
-              <p className="text-sm flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+            <div className="space-y-2.5 mb-5">
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
                 <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
                 <span>ASCAP, BMI, SESAC & GMR licensing included — no separate contracts</span>
               </p>
-              <p className="text-sm flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
                 <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
                 <span>Backed by Spotify — 100M+ tracks, curated playlists for fitness</span>
               </p>
-              <p className="text-sm flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
                 <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
                 <span>Soundzones, scheduled playlists, multi-location control</span>
               </p>
             </div>
 
-            <p className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>
+            <p className="text-xs pt-4" style={{ color: 'var(--dm-text-muted)', borderTop: '1px solid var(--dm-border)' }}>
               No paperwork. No reporting. Fully covered from day one.
             </p>
           </div>
 
           {/* Instructor-Led Section */}
           {hasInstructorLed && (
-            <div className="pb-5 mb-5" style={{ borderBottom: '1px solid var(--dm-border)' }}>
+            <div className="pb-6 mb-6" style={{ borderBottom: '1px solid var(--dm-border)' }}>
               <h4 className="text-base font-semibold mb-2" style={{ color: 'var(--dm-text-primary)' }}>
                 Instructor-Led Classes — We'll Guide You
               </h4>
               
-              <p className="text-sm mb-3" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+              <p className="text-sm mb-4" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
                 Instructor-led classes require additional licensing regardless of platform. We'll walk you through exactly what's needed.
               </p>
               
               {instructorLedCost && instructorLedCost > 0 && (
-                <div className="rounded-lg px-4 py-2.5 mb-3" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
+                <div className="rounded-lg px-4 py-3 mb-4" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
                   <p className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>
                     Estimated cost: <strong style={{ color: 'var(--dm-text-primary)' }}>${instructorLedCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/year</strong>
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--dm-text-muted)' }}>
+                  <p className="text-xs mt-1" style={{ color: 'var(--dm-text-muted)' }}>
                     Depends on class format and frequency. We'll confirm the exact amount.
                   </p>
                 </div>
               )}
               
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <p className="text-xs flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)' }}>
                   <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
                   <span>Same music platform for classes — custom playlists, Spotify imports</span>
@@ -123,14 +123,14 @@ export default function RecommendedSetupPanel({
             </div>
           )}
 
-          {/* Savings Summary */}
+          {/* Savings Summary — brand-consistent blue instead of green */}
           {estimatedSavings > 100 && (
-            <div className="rounded-lg p-3" style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0' }}>
-              <p className="text-sm font-bold" style={{ color: '#166534' }}>
-                Estimated savings: ${estimatedSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/year vs. licensing directly
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--dm-primary-light)', border: '1px solid rgba(0, 174, 239, 0.25)' }}>
+              <p className="text-lg font-bold" style={{ color: 'var(--dm-text-primary)' }}>
+                Save ~${estimatedSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/year
               </p>
-              <p className="text-xs mt-0.5" style={{ color: '#16A34A' }}>
-                Plus a full commercial music platform — which you'd pay for separately with direct licensing
+              <p className="text-xs mt-1" style={{ color: 'var(--dm-text-secondary)' }}>
+                vs. licensing directly — plus a full commercial music platform included
               </p>
             </div>
           )}
