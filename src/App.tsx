@@ -370,7 +370,7 @@ function App() {
                     Tell us about your gym
                   </p>
                   <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)' }}>
-                    PRO licensing fees are based on your facility size, membership, and how you use music.
+                    PRO (Performing Rights Organization) licensing fees are based on your facility size, membership, and how you use music.
                   </p>
                   
                   <div className={`grid gap-4 ${gymDetails.musicUseTypes.includes('ambient') ? 'grid-cols-3' : 'grid-cols-2'}`}>
@@ -517,26 +517,6 @@ function App() {
                   </div>
                 )}
                 
-                <div className="pt-4 border-t animate-fadeIn" style={{ borderColor: 'var(--dm-border)' }}>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="isHfaMember"
-                      checked={gymDetails.isHfaMember}
-                      onChange={handleInputChange}
-                      className="checkbox-brand"
-                    />
-                    <label className="ml-2 text-sm flex items-center gap-1" style={{ color: 'var(--dm-text-secondary)' }}>
-                      Health & Fitness Association (HFA) Member
-                      <span className="relative group">
-                        <span className="text-gray-400 hover:text-gray-600 cursor-help text-xs">ⓘ</span>
-                        <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                          HFA members may receive discounts on certain PRO fees.
-                        </span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
               </>
             )}
           </div>

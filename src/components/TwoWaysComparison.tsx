@@ -68,12 +68,24 @@ export default function TwoWaysComparison({
           Recommended
         </div>
         
-        <h3 className="text-lg font-bold mb-1 mt-1" style={{ color: 'var(--dm-text-primary)' }}>
-          Simplify with Dynamic Media
-        </h3>
-        <p className="text-sm font-medium mb-4" style={{ color: 'var(--dm-primary)' }}>
-          One subscription. Licensing included. No paperwork.
-        </p>
+        {/* Header row — title left, price right (mirrors direct licensing card) */}
+        <div className="flex items-start justify-between gap-4 mt-1">
+          <div className="flex-1">
+            <h3 className="text-lg font-bold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+              Simplify with Dynamic Media
+            </h3>
+            <p className="text-sm font-medium mb-4" style={{ color: 'var(--dm-primary)' }}>
+              One subscription. Licensing included. No paperwork.
+            </p>
+          </div>
+          <div className="text-right flex-shrink-0">
+            <div className="text-xs" style={{ color: 'var(--dm-primary)' }}>Starting at</div>
+            <div className="text-lg font-bold" style={{ color: 'var(--dm-text-primary)' }}>
+              $29.99/mo
+            </div>
+            <div className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>per location</div>
+          </div>
+        </div>
         
         <div className="space-y-2 mb-5">
           <p className="text-sm flex items-start gap-2" style={{ color: 'var(--dm-text-primary)' }}>
@@ -90,18 +102,17 @@ export default function TwoWaysComparison({
           </p>
         </div>
 
-        <div className="flex items-baseline justify-between mb-5 pt-4" style={{ borderTop: '1px solid rgba(0, 174, 239, 0.2)' }}>
-          <div>
-            <span className="text-xs font-medium" style={{ color: 'var(--dm-primary)' }}>Starting at </span>
-            <span className="text-xl font-bold" style={{ color: 'var(--dm-text-primary)' }}>$29.99/mo</span>
-            <span className="text-xs ml-1" style={{ color: 'var(--dm-text-muted)' }}>per location</span>
-          </div>
-          {estimatedSavings > 100 && (
-            <span className="text-sm font-bold" style={{ color: 'var(--dm-primary)' }}>
+        {/* Savings — prominent, bottom of card */}
+        {estimatedSavings > 100 && (
+          <div className="mb-5 pt-4" style={{ borderTop: '1px solid rgba(0, 174, 239, 0.2)' }}>
+            <span className="text-xl font-bold" style={{ color: 'var(--dm-primary)' }}>
               Save ~${estimatedSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/yr
             </span>
-          )}
-        </div>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--dm-text-muted)' }}>
+              vs. licensing directly with the PROs
+            </p>
+          </div>
+        )}
 
         <button
           onClick={onSeeRecommendedSetup}

@@ -48,7 +48,7 @@ export default function SimpleBaselineCost({
         Your estimated annual licensing cost
       </h2>
       <p className="text-sm mb-5" style={{ color: 'var(--dm-text-secondary)' }}>
-        This is what your gym would pay to license music directly with each PRO.{' '}
+        This is what your gym would pay to license music directly with each PRO (Performing Rights Organization).{' '}
         {hasInstructorLed 
           ? 'Includes background music and instructor-led class licensing.'
           : 'Covers background music throughout your facility.'}
