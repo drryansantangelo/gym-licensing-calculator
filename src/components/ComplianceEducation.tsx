@@ -10,18 +10,21 @@ export default function ComplianceEducation() {
       quote:
         'We grant to you limited, non-exclusive, revocable permission to make personal, non-commercial use of the Spotify Service.',
       source: 'Spotify Terms of Service',
+      verdict: 'Not licensed for business use.',
     },
     {
       name: 'Apple Music',
       quote:
         'You may use the Services and Content only for personal, noncommercial purposes.',
       source: 'Apple Media Services Terms',
+      verdict: 'Not licensed for business use.',
     },
     {
       name: 'YouTube',
       quote:
         'You may access and use the Service as made available to you, as long as you comply with this Agreement. You may view or listen to Content for your personal, non-commercial use.',
       source: 'YouTube Terms of Service',
+      verdict: 'Not licensed for business use.',
     },
   ];
 
@@ -34,15 +37,15 @@ export default function ComplianceEducation() {
             className="text-3xl md:text-4xl font-bold mb-4"
             style={{ color: 'var(--dm-text-on-dark)' }}
           >
-            Most Gyms Are Using Music That Isn't Fully Licensed
+            Consumer Music Services Are Not Licensed for Gyms
           </h2>
           <p
             className="text-lg max-w-2xl mx-auto"
             style={{ color: 'var(--dm-text-on-dark-muted)', lineHeight: '1.7' }}
           >
-            Many gym owners use Spotify, Apple Music, or YouTube without realizing these
-            platforms are not licensed for commercial use. This can expose your business to
-            fines and unexpected licensing fees.
+            Spotify, Apple Music, YouTube, and every other consumer music app explicitly
+            prohibit commercial use in their terms of service. Playing them in your gym
+            is a copyright violation — no exceptions.
           </p>
         </div>
 
@@ -68,8 +71,14 @@ export default function ComplianceEducation() {
               >
                 "{platform.quote}"
               </p>
-              <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+              <p className="text-xs mb-3" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
                 — {platform.source}
+              </p>
+              <p
+                className="text-sm font-bold"
+                style={{ color: '#F87171' }}
+              >
+                ✕ {platform.verdict}
               </p>
             </div>
           ))}
@@ -79,19 +88,19 @@ export default function ComplianceEducation() {
         <div
           className="rounded-xl p-6 text-center max-w-3xl mx-auto"
           style={{
-            background: 'linear-gradient(135deg, rgba(0, 174, 239, 0.15) 0%, rgba(0, 174, 239, 0.05) 100%)',
-            border: '1px solid rgba(0, 174, 239, 0.3)',
+            background: 'linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(248, 113, 113, 0.05) 100%)',
+            border: '1px solid rgba(248, 113, 113, 0.3)',
           }}
         >
           <p
-            className="text-lg font-semibold mb-1"
+            className="text-lg font-bold mb-2"
             style={{ color: 'var(--dm-text-on-dark)' }}
           >
-            Bottom Line
+            There is no consumer music service that is legal to play in a gym.
           </p>
           <p className="text-base mb-5" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
-            If you're using consumer music apps in your gym, you may not be fully licensed —
-            and the fines can reach <strong style={{ color: '#FBBF24' }}>$150,000 per song</strong>.
+            PROs actively enforce copyright law against businesses. Fines can reach{' '}
+            <strong style={{ color: '#FBBF24' }}>$150,000 per song</strong> played without a license.
           </p>
           <button onClick={scrollToCalculator} className="btn-primary">
             Find Out What Your Gym Owes

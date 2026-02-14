@@ -72,17 +72,9 @@ export default function LandingHero() {
             ))}
           </ul>
 
-          <div className="flex flex-wrap gap-4">
-            <button onClick={scrollToCalculator} className="btn-primary btn-primary-lg">
-              Calculate My Licensing Cost
-            </button>
-            <button
-              onClick={scrollToCalculator}
-              className="btn-outline btn-primary-lg"
-            >
-              See How It Works
-            </button>
-          </div>
+          <button onClick={scrollToCalculator} className="btn-primary btn-primary-lg">
+            Calculate My Licensing Cost
+          </button>
         </div>
       </div>
     </section>
