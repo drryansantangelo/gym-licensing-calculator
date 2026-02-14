@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { calculateTotalFees } from './utils/calculateFees';
 import { calculateAllScenarios, type ScenarioResult } from './utils/calculateScenarios';
 import type { GymDetails, GymRoom, LicenseFee, MusicUseType } from './types';
-import Modal from './components/Modal';
-import SimpleBaselineCost from './components/SimpleBaselineCost';
-import TwoWaysComparison from './components/TwoWaysComparison';
-import RecommendedSetupPanel from './components/RecommendedSetupPanel';
-import AscapModalContent from './components/AscapModalContent';
-import BmiModalContent from './components/BmiModalContent';
-import SesacModalContent from './components/SesacModalContent';
-import GmrModalContent from './components/GmrModalContent';
-import HowToGetAscapLicenseModal from './components/HowToGetAscapLicenseModal';
-import HowToGetBmiLicenseModal from './components/HowToGetBmiLicenseModal';
-import HowToGetSesacLicenseModal from './components/HowToGetSesacLicenseModal';
-import HowToGetGmrLicenseModal from './components/HowToGetGmrLicenseModal';
+
+// Landing page sections
+import LandingHero from './components/LandingHero';
+import ComplianceEducation from './components/ComplianceEducation';
+import LicensingExplainer from './components/LicensingExplainer';
+import InlineCalculator from './components/InlineCalculator';
+import CalculatorResults from './components/CalculatorResults';
+import LeadMagnet from './components/LeadMagnet';
+import WhyDynamicMedia from './components/WhyDynamicMedia';
+import FaqSection from './components/FaqSection';
+import FinalCta from './components/FinalCta';
 
 const sanitizeInt = (v: string) => (v ? String(parseInt(v, 10) || '') : '');
 
@@ -27,24 +26,11 @@ const initialGymDetails: GymDetails = {
   isSoundtrackUser: false,
 };
 
-const musicUseOptions = [
-  { label: 'Background music', sublabel: 'Lobby, gym floor, locker rooms, common areas', value: 'ambient' },
-  { label: 'Instructor-led classes', sublabel: 'Group fitness, spin, yoga, or any class with an instructor', value: 'group' }
-] as const;
-
-type OrgName = 'ASCAP' | 'BMI' | 'SESAC' | 'GMR';
-type ModalContentType = 'calculation' | 'howto';
-interface ActiveModal {
-  org: OrgName;
-  contentType: ModalContentType;
-}
-
 function App() {
   const [gymDetails, setGymDetails] = useState<GymDetails>(initialGymDetails);
   const [, setFees] = useState<LicenseFee[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [rooms, setRooms] = useState<GymRoom[]>([]);
-  const [activeModal, setActiveModal] = useState<ActiveModal | null>(null);
   const [validationErrors, setValidationErrors] = useState<Set<string>>(new Set());
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const [scenarios, setScenarios] = useState<{
@@ -52,10 +38,9 @@ function App() {
     dynamicMediaAmbient: ScenarioResult;
     dynamicMediaInstructed: ScenarioResult;
   } | null>(null);
-  const [showRecommendedSetup, setShowRecommendedSetup] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
-  const recommendedSetupRef = useRef<HTMLDivElement>(null);
 
+  // --- Form handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -65,37 +50,21 @@ function App() {
           const newMusicUseTypes = checked
             ? [...prev.musicUseTypes, musicType]
             : prev.musicUseTypes.filter(t => t !== musicType);
-          
           const newSquareFootage = musicType === 'ambient' && !checked ? 0 : prev.squareFootage;
-          
-          return {
-            ...prev,
-            musicUseTypes: newMusicUseTypes,
-            squareFootage: newSquareFootage
-          };
+          return { ...prev, musicUseTypes: newMusicUseTypes, squareFootage: newSquareFootage };
         });
-        
-        // Auto-expand room input when Group Fitness is selected
         if (musicType === 'group' && checked && rooms.length === 0) {
           setRooms([{ classesPerWeek: 0, classCapacity: 0 }]);
         }
-        // Remove all rooms when Group Fitness is unchecked
         if (musicType === 'group' && !checked) {
           setRooms([]);
         }
       } else {
-        setGymDetails(prev => ({
-          ...prev,
-          [name]: checked
-        }));
+        setGymDetails(prev => ({ ...prev, [name]: checked }));
       }
     } else if (type === 'number') {
-      setGymDetails(prev => ({
-        ...prev,
-        [name]: Number(sanitizeInt(value))
-      }));
+      setGymDetails(prev => ({ ...prev, [name]: Number(sanitizeInt(value)) }));
     }
-    
     if (hasAttemptedSubmit) {
       setValidationErrors(prev => {
         const newErrors = new Set(prev);
@@ -121,7 +90,6 @@ function App() {
     newRooms[index] = { ...newRooms[index], [field]: Number(sanitizeInt(value)) };
     setRooms(newRooms);
     setGymDetails(prev => ({ ...prev, rooms: newRooms }));
-    
     if (hasAttemptedSubmit) {
       setValidationErrors(prev => {
         const newErrors = new Set(prev);
@@ -135,7 +103,6 @@ function App() {
     const newRooms = rooms.filter((_, i) => i !== index);
     setRooms(newRooms);
     setGymDetails(prev => ({ ...prev, rooms: newRooms }));
-    
     if (hasAttemptedSubmit) {
       setValidationErrors(prev => {
         const newErrors = new Set(prev);
@@ -149,457 +116,117 @@ function App() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setHasAttemptedSubmit(true);
-    
+
     const errors = new Set<string>();
-    
-    if (gymDetails.numberOfLocations < 1) {
-      errors.add('numberOfLocations');
-    }
-    
-    if (gymDetails.totalMembers <= 0) {
-      errors.add('totalMembers');
-    }
-    
-    if (gymDetails.musicUseTypes.includes('ambient') && gymDetails.squareFootage <= 0) {
-      errors.add('squareFootage');
-    }
-    
+    if (gymDetails.numberOfLocations < 1) errors.add('numberOfLocations');
+    if (gymDetails.totalMembers <= 0) errors.add('totalMembers');
+    if (gymDetails.musicUseTypes.includes('ambient') && gymDetails.squareFootage <= 0) errors.add('squareFootage');
     if (gymDetails.musicUseTypes.includes('group')) {
       if (rooms.length === 0) {
         errors.add('groupFitnessRooms');
       } else {
         rooms.forEach((room, index) => {
-          if (room.classesPerWeek <= 0) {
-            errors.add(`room-${index}-classesPerWeek`);
-          }
-          if (room.classCapacity <= 0) {
-            errors.add(`room-${index}-classCapacity`);
-          }
+          if (room.classesPerWeek <= 0) errors.add(`room-${index}-classesPerWeek`);
+          if (room.classCapacity <= 0) errors.add(`room-${index}-classCapacity`);
         });
       }
     }
-    
-    if (gymDetails.musicUseTypes.length === 0) {
-      errors.add('musicUse');
-    }
-    
+    if (gymDetails.musicUseTypes.length === 0) errors.add('musicUse');
     setValidationErrors(errors);
-    
-    if (errors.size > 0) {
-      return;
-    }
-    
-    // Show calculating state briefly to increase perceived value
+    if (errors.size > 0) return;
+
     setIsCalculating(true);
     setShowResults(false);
-    setShowRecommendedSetup(false);
 
     setTimeout(() => {
       const calculatedFees = calculateTotalFees(gymDetails);
       setFees(calculatedFees);
-      
-      // Calculate all scenarios
       const calculatedScenarios = calculateAllScenarios(gymDetails);
       setScenarios(calculatedScenarios);
-      
       setIsCalculating(false);
       setShowResults(true);
-      
-      // Track completion
-      handleCalculatorCompleted();
-      
+
+      // Scroll to results
       setTimeout(() => {
-        const resultsElement = document.getElementById('results-section');
-        if (resultsElement) {
-          resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        const el = document.getElementById('results-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }, 800);
   };
 
-  const openModal = (org: OrgName, contentType: ModalContentType) => {
-    setActiveModal({ org, contentType });
-  };
-
-  const closeModal = () => {
-    setActiveModal(null);
-  };
-
-  const getModalContent = () => {
-    if (!activeModal) return null;
-
-    const { org, contentType } = activeModal;
-
-    if (contentType === 'calculation') {
-      switch (org) {
-        case 'ASCAP': return <AscapModalContent />;
-        case 'BMI': return <BmiModalContent />;
-        case 'SESAC': return <SesacModalContent />;
-        case 'GMR': return <GmrModalContent />;
-        default: return null;
-      }
-    } else {
-      switch (org) {
-        case 'ASCAP': return <HowToGetAscapLicenseModal />;
-        case 'BMI': return <HowToGetBmiLicenseModal />;
-        case 'SESAC': return <HowToGetSesacLicenseModal />;
-        case 'GMR': return <HowToGetGmrLicenseModal />;
-        default: return null;
-      }
-    }
-  };
-
-  // Event tracking functions
-  const trackEvent = (eventName: string, data?: Record<string, any>) => {
-    console.log('Event:', eventName, data);
-    // TODO: Add HubSpot or analytics tracking here
-    // window.dataLayer?.push({ event: eventName, ...data });
-  };
-
-  const handleCalculatorCompleted = () => {
-    trackEvent('calculator_completed', {
-      numberOfLocations: gymDetails.numberOfLocations,
-      musicUseTypes: gymDetails.musicUseTypes,
-      hasInstructorLed: gymDetails.musicUseTypes.includes('group')
-    });
-  };
-
-  const handleProBreakdownOpened = () => {
-    trackEvent('pro_breakdown_opened');
-  };
-
-  const handleRecommendedSetupOpened = () => {
-    setShowRecommendedSetup(true);
-    trackEvent('recommended_setup_opened');
-  };
-
-  // Scroll to recommended setup section when it opens
-  useEffect(() => {
-    if (showRecommendedSetup && recommendedSetupRef.current) {
-      // Use setTimeout to ensure the component has fully rendered
-      setTimeout(() => {
-        recommendedSetupRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        // Optional: Set focus for accessibility
-        recommendedSetupRef.current?.focus({ preventScroll: true });
-      }, 100);
-    }
-  }, [showRecommendedSetup]);
-
-  const handleReviewConfirmClicked = () => {
-    trackEvent('review_confirm_clicked');
-    // Redirect to consultation/review form
+  // --- CTA handlers ---
+  const handleGetQuote = () => {
     window.location.href = 'https://dynamicmediamusic.com/consultation';
   };
 
-  const handleContactSpecialist = () => {
-    trackEvent('contact_specialist_clicked');
-    window.location.href = 'https://dynamicmediamusic.com/contact';
-  };
-  
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--dm-bg)' }}>
-      <div className="container-dm py-8">
-        {/* Header — compact: title left, logo+trust right */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold mb-0.5" style={{ color: 'var(--dm-text-primary)' }}>
-              Music Licensing Calculator
-            </h1>
-            <p className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>
-              for gyms and fitness facilities
-            </p>
-          </div>
-          <div className="flex flex-col items-end flex-shrink-0 ml-4">
-            <a href="https://dynamicmediamusic.com/" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity">
-              <img 
-                src="/DM-logo@4x.png" 
-                alt="Dynamic Media" 
-                className="h-10 w-auto"
-              />
-            </a>
-            <p className="text-xs mt-1" style={{ color: 'var(--dm-text-muted)' }}>
-              Trusted by 55,000+ businesses
-            </p>
-          </div>
-        </div>
+    <div>
+      {/* Section 1: Hero */}
+      <LandingHero />
 
-        <form onSubmit={handleSubmit} className="card card-elevated mb-8">
-          <div className="grid grid-cols-1 gap-5">
-            <div>
-              <label className="block text-sm font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                Where do you play music? <span style={{ color: '#DC2626' }}>*</span>
-              </label>
-              <p className="text-xs mb-3" style={{ color: 'var(--dm-text-muted)' }}>
-                Select all that apply. Different music uses require different licenses.
-              </p>
-              <div className={`space-y-2 ${validationErrors.has('musicUse') ? 'p-3 bg-red-50 border-2 border-red-500 rounded-lg' : ''}`}>
-                {musicUseOptions.map(option => (
-                  <div key={option.value} className="flex items-start">
-                    <input
-                      type="checkbox"
-                      name="musicUse"
-                      value={option.value}
-                      checked={gymDetails.musicUseTypes.includes(option.value)}
-                      onChange={handleInputChange}
-                      className="checkbox-brand mt-0.5"
-                    />
-                    <div className="ml-3">
-                      <label className="text-sm font-medium block" style={{ color: 'var(--dm-text-primary)' }}>
-                        {option.label}
-                      </label>
-                      <span className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>
-                        {option.sublabel}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {validationErrors.has('musicUse') && (
-                <p className="text-red-600 text-sm mt-1">Please select at least one music use type</p>
-              )}
-            </div>
-            
-            {/* Gym details — revealed after music type is selected */}
-            {gymDetails.musicUseTypes.length > 0 && (
-              <>
-                <div className="pt-5 border-t animate-fadeIn" style={{ borderColor: 'var(--dm-border)' }}>
-                  <p className="text-sm font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                    Tell us about your gym
-                  </p>
-                  <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)' }}>
-                    PRO (Performing Rights Organization) licensing fees are based on your facility size, membership, and how you use music.
-                  </p>
-                  
-                  <div className={`grid gap-4 ${gymDetails.musicUseTypes.includes('ambient') ? 'grid-cols-3' : 'grid-cols-2'}`}>
-                    <div>
-                      <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                        Locations <span style={{ color: '#DC2626' }}>*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="numberOfLocations"
-                        min="1"
-                        step="1"
-                        placeholder="e.g., 1"
-                        value={gymDetails.numberOfLocations || ''}
-                        onChange={handleInputChange}
-                        className={`input-field w-full ${
-                          validationErrors.has('numberOfLocations') ? 'border-red-500' : ''
-                        }`}
-                        required
-                      />
-                      {validationErrors.has('numberOfLocations') && (
-                        <p className="text-red-600 text-xs mt-1">Required</p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                        Members <span style={{ color: '#DC2626' }}>*</span>
-                      </label>
-                      <input
-                        type="number"
-                        name="totalMembers"
-                        min="1"
-                        step="1"
-                        placeholder="e.g., 1000"
-                        value={gymDetails.totalMembers || ''}
-                        onChange={handleInputChange}
-                        className={`input-field w-full ${
-                          validationErrors.has('totalMembers') ? 'border-red-500' : ''
-                        }`}
-                        required
-                      />
-                      {validationErrors.has('totalMembers') && (
-                        <p className="text-red-600 text-xs mt-1">Required</p>
-                      )}
-                    </div>
+      {/* Section 2: Compliance Education */}
+      <ComplianceEducation />
 
-                    {gymDetails.musicUseTypes.includes('ambient') && (
-                      <div className="transition-all duration-300 ease-in-out">
-                        <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                          Sq. Footage <span style={{ color: '#DC2626' }}>*</span>
-                        </label>
-                        <input
-                          type="number"
-                          name="squareFootage"
-                          min="1"
-                          step="1"
-                          placeholder="e.g., 5000"
-                          value={gymDetails.squareFootage || ''}
-                          onChange={handleInputChange}
-                          className={`input-field w-full ${
-                            validationErrors.has('squareFootage') ? 'border-red-500' : ''
-                          }`}
-                          required
-                        />
-                        {validationErrors.has('squareFootage') && (
-                          <p className="text-red-600 text-xs mt-1">Required</p>
-                        )}
-                      </div>
-                    )}
+      {/* Section 3: What Is Music Licensing */}
+      <LicensingExplainer />
+
+      {/* Section 4: Calculator */}
+      <InlineCalculator
+        gymDetails={gymDetails}
+        rooms={rooms}
+        validationErrors={validationErrors}
+        isCalculating={isCalculating}
+        onInputChange={handleInputChange}
+        onRoomChange={handleRoomChange}
+        onAddRoom={handleAddRoom}
+        onRemoveRoom={handleRemoveRoom}
+        onSubmit={handleSubmit}
+      />
+
+      {/* Calculating state */}
+      {isCalculating && (
+        <section className="section-gray" style={{ paddingTop: 0 }}>
+          <div className="container-dm">
+            <div className="container-narrow">
+              <div id="results-section" className="card card-elevated text-center py-16 animate-fadeIn">
+                <div className="animate-pulse-subtle">
+                  <div className="text-2xl font-bold mb-3" style={{ color: 'var(--dm-text-primary)' }}>
+                    Calculating your licensing costs...
                   </div>
+                  <p className="text-sm" style={{ color: 'var(--dm-text-muted)' }}>
+                    Checking rates across ASCAP, BMI, SESAC, and GMR
+                  </p>
                 </div>
-
-                {gymDetails.musicUseTypes.includes('group') && (
-                  <div className={`pt-5 border-t animate-fadeIn ${validationErrors.has('groupFitnessRooms') ? 'bg-red-50 border-red-500' : ''}`} style={{ borderColor: 'var(--dm-border)' }}>
-                    <h3 className="text-sm font-semibold mb-2 flex items-center gap-2" style={{ color: 'var(--dm-text-primary)' }}>
-                      Group Fitness Rooms <span style={{ color: '#DC2626' }}>*</span>
-                      <span className="relative group">
-                        <span className="text-gray-400 hover:text-gray-600 cursor-help text-sm" title="Enter details for rooms with instructor-led classes">ⓘ</span>
-                      </span>
-                    </h3>
-                    <div className="space-y-3">
-                      {rooms.map((room, index) => (
-                        <div key={index} className="rounded-md p-3" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
-                          <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium" style={{ color: 'var(--dm-text-primary)', minWidth: '60px' }}>
-                              Room {index + 1}:
-                            </span>
-                            <div className="flex-1 flex items-center gap-2">
-                              <input
-                                type="number"
-                                name={`room-${index}-classesPerWeek`}
-                                min="1"
-                                step="1"
-                                placeholder="10"
-                                value={room.classesPerWeek || ''}
-                                onChange={(e) => handleRoomChange(index, 'classesPerWeek', e.target.value)}
-                                className={`input-field w-20 ${
-                                  validationErrors.has(`room-${index}-classesPerWeek`) ? 'border-red-500' : ''
-                                }`}
-                              />
-                              <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>classes/week</span>
-                            </div>
-                            <div className="flex-1 flex items-center gap-2">
-                              <input
-                                type="number"
-                                name={`room-${index}-classCapacity`}
-                                min="1"
-                                step="1"
-                                placeholder="25"
-                                value={room.classCapacity || ''}
-                                onChange={(e) => handleRoomChange(index, 'classCapacity', e.target.value)}
-                                className={`input-field w-20 ${
-                                  validationErrors.has(`room-${index}-classCapacity`) ? 'border-red-500' : ''
-                                }`}
-                              />
-                              <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>capacity</span>
-                            </div>
-                            {rooms.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveRoom(index)}
-                                className="text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
-                                style={{ color: '#DC2626' }}
-                              >
-                                ✕
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={handleAddRoom}
-                        className="text-sm font-semibold px-4 py-2 rounded transition-colors"
-                        style={{ color: 'var(--dm-primary)', border: '1px dashed var(--dm-primary)' }}
-                      >
-                        + Add another room
-                      </button>
-                    </div>
-                    {validationErrors.has('groupFitnessRooms') && (
-                      <p className="text-red-600 text-sm mt-2">At least one group fitness room is required</p>
-                    )}
-                  </div>
-                )}
-                
-              </>
-            )}
-          </div>
-          
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="btn-primary w-full text-base"
-            >
-              Calculate My Licensing Cost
-            </button>
-            <p className="text-xs text-center mt-3" style={{ color: 'var(--dm-text-muted)' }}>
-              Based on official PRO rate schedules. No account required.
-            </p>
-          </div>
-        </form>
-
-        {/* Calculating State */}
-        {isCalculating && (
-          <div id="results-section" className="card card-elevated text-center py-16 animate-fadeIn">
-            <div className="animate-pulse-subtle">
-              <div className="text-2xl font-bold mb-3" style={{ color: 'var(--dm-text-primary)' }}>
-                Calculating your licensing costs...
               </div>
-              <p className="text-sm" style={{ color: 'var(--dm-text-muted)' }}>
-                Checking rates across ASCAP, BMI, SESAC, and GMR
-              </p>
             </div>
           </div>
-        )}
+        </section>
+      )}
 
-        {showResults && scenarios && (
-          <div id="results-section" className="space-y-5">
-            {/* BLOCK 1: Simple Baseline Cost */}
-            <SimpleBaselineCost
-              scenario={scenarios.baseline}
-              numberOfLocations={gymDetails.numberOfLocations}
-              hasInstructorLed={gymDetails.musicUseTypes.includes('group')}
-              gymDetails={gymDetails}
-            />
+      {/* Section 5: Results */}
+      {showResults && scenarios && (
+        <div id="results-section">
+          <CalculatorResults
+            scenario={scenarios.baseline}
+            gymDetails={gymDetails}
+            onGetQuote={handleGetQuote}
+          />
+        </div>
+      )}
 
-            {/* BLOCK 2: Two Ways Comparison — tight connection to Block 1 */}
-            <div className="animate-fadeIn-delay-1">
-              <TwoWaysComparison
-                baselineCost={scenarios.baseline.totalPerLocationFee}
-                onSeeRecommendedSetup={handleRecommendedSetupOpened}
-              />
-            </div>
+      {/* Section 6: Lead Magnet */}
+      <LeadMagnet />
 
-            {/* BLOCK 3: Recommended Setup Panel (Expandable) — includes reassurance */}
-            {showRecommendedSetup && (
-              <div ref={recommendedSetupRef} tabIndex={-1} style={{ outline: 'none' }}>
-                <RecommendedSetupPanel
-                  hasInstructorLed={gymDetails.musicUseTypes.includes('group')}
-                  instructorLedCost={
-                    gymDetails.musicUseTypes.includes('group')
-                      ? scenarios.dynamicMediaInstructed.fees.reduce((sum, fee) => sum + fee.perLocationFee, 0)
-                      : undefined
-                  }
-                  baselineCost={scenarios.baseline.totalPerLocationFee}
-                  scenario={scenarios.baseline}
-                  gymDetails={gymDetails}
-                  onConfirmReview={handleReviewConfirmClicked}
-                  onContactSpecialist={handleContactSpecialist}
-                />
-              </div>
-            )}
-          </div>
-        )}
+      {/* Section 7: Why Dynamic Media */}
+      <WhyDynamicMedia />
 
-        {/* Modal */}
-        {activeModal && (
-          <Modal 
-            isOpen={!!activeModal} 
-            onClose={closeModal} 
-            title={`About ${activeModal.org} Licensing`}
-          >
-            {getModalContent()}
-          </Modal>
-        )}
-      </div>
+      {/* Section 8: FAQ */}
+      <FaqSection />
+
+      {/* Section 9: Final CTA + Footer */}
+      <FinalCta />
     </div>
   );
 }
 
-export default App; 
+export default App;

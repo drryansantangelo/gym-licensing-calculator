@@ -2,47 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Design Tokens from Landing Page - EXACT MATCH */
+/* Design Tokens — Unified Marketing Funnel */
 :root {
-  /* Brand Colors - Primary CTA (Cyan/Blue) */
+  /* Brand Colors */
   --dm-primary: #00aeef;
-  --dm-primary-hover: #0052A3;
+  --dm-primary-hover: #0099d4;
+  --dm-primary-dark: #0077a8;
   --dm-primary-focus: rgba(0, 174, 239, 0.3);
   --dm-primary-light: #E0F2FF;
   
-  /* Secondary Blue (for accents) */
   --dm-blue: #0066CC;
   --dm-blue-hover: #0052A3;
   --dm-blue-light: #E6F2FF;
   
   /* Backgrounds */
   --dm-bg: #F7F9FC;
+  --dm-bg-dark: #0F1A2E;
+  --dm-bg-darker: #0A1220;
   --dm-card: #FFFFFF;
-  --dm-hero-dark: #1A1A1A;
   
   /* Text Colors */
   --dm-text-primary: #2C3E50;
   --dm-text-secondary: #64748B;
   --dm-text-muted: #94A3B8;
+  --dm-text-on-dark: #FFFFFF;
+  --dm-text-on-dark-muted: rgba(255, 255, 255, 0.7);
   
   /* Borders & Shadows */
   --dm-border: #E2E8F0;
   --dm-border-accent: #CBD5E1;
   --dm-shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-  --dm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  --dm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --dm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --dm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --dm-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
   /* Sizing */
   --dm-radius: 8px;
   --dm-radius-lg: 12px;
-  --dm-container: 760px;
-  --dm-space-section: 4rem;
+  --dm-radius-xl: 16px;
+  --dm-container: 1100px;
+  --dm-container-narrow: 760px;
 }
 
 @layer base {
   body {
     @apply antialiased;
-    background-color: var(--dm-bg);
+    background-color: var(--dm-card);
     color: var(--dm-text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
@@ -54,20 +59,9 @@
     line-height: 1.3;
   }
 
-  h1 {
-    @apply text-4xl;
-    font-weight: 700;
-  }
-
-  h2 {
-    @apply text-3xl;
-    font-weight: 700;
-  }
-
-  h3 {
-    @apply text-2xl;
-    font-weight: 600;
-  }
+  h1 { @apply text-4xl; font-weight: 700; }
+  h2 { @apply text-3xl; font-weight: 700; }
+  h3 { @apply text-2xl; font-weight: 600; }
 
   p {
     color: var(--dm-text-secondary);
@@ -76,11 +70,49 @@
 }
 
 @layer components {
-  /* Primary Button - EXACT MATCH to Landing Page CTA */
+  /* Containers */
+  .container-dm {
+    max-width: var(--dm-container);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .container-narrow {
+    max-width: var(--dm-container-narrow);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* Full-width sections */
+  .section-light {
+    background-color: var(--dm-card);
+    padding: 5rem 0;
+  }
+
+  .section-gray {
+    background-color: var(--dm-bg);
+    padding: 5rem 0;
+  }
+
+  .section-dark {
+    background-color: var(--dm-bg-dark);
+    padding: 5rem 0;
+  }
+
+  .section-brand {
+    background: linear-gradient(135deg, #00aeef 0%, #0077a8 100%);
+    padding: 5rem 0;
+  }
+
+  /* Primary Button */
   .btn-primary {
     background-color: var(--dm-primary);
     color: white;
-    padding: 0.75rem 1.75rem;
+    padding: 0.875rem 2rem;
     border-radius: 6px;
     font-weight: 600;
     font-size: 1rem;
@@ -110,6 +142,34 @@
     box-shadow: 0 0 0 3px var(--dm-primary-focus);
   }
 
+  .btn-primary-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+    border-radius: 8px;
+  }
+
+  /* Outline button */
+  .btn-outline {
+    background-color: transparent;
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.8);
+  }
+
   /* Secondary Link Button */
   .btn-secondary {
     color: var(--dm-primary);
@@ -117,6 +177,9 @@
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.2s ease;
+    cursor: pointer;
+    background: none;
+    border: none;
   }
 
   .btn-secondary:hover {
@@ -124,7 +187,7 @@
     text-decoration: underline;
   }
 
-  /* Card Styles - Matches Landing Page Cards */
+  /* Card Styles */
   .card {
     background-color: var(--dm-card);
     border: 1px solid var(--dm-border);
@@ -134,10 +197,11 @@
   }
 
   .card-elevated {
-    box-shadow: var(--dm-shadow-lg);
+    box-shadow: var(--dm-shadow-xl);
+    border: none;
   }
 
-  /* Input Styles - Premium Feel */
+  /* Input Styles */
   .input-field {
     background-color: white;
     border: 1px solid var(--dm-border);
@@ -158,16 +222,7 @@
     color: var(--dm-text-muted);
   }
 
-  /* Container - Matches Landing Page */
-  .container-dm {
-    max-width: var(--dm-container);
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  /* Custom Checkbox - Brand Blue with White Check */
+  /* Custom Checkbox */
   .checkbox-brand {
     appearance: none;
     -webkit-appearance: none;
@@ -179,6 +234,7 @@
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease;
+    flex-shrink: 0;
   }
 
   .checkbox-brand:hover {
@@ -206,6 +262,21 @@
     outline: none;
     box-shadow: 0 0 0 3px var(--dm-primary-focus);
   }
+
+  /* Section heading styles */
+  .section-label {
+    display: inline-block;
+    color: var(--dm-primary);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-label-light {
+    color: rgba(255, 255, 255, 0.7);
+  }
 }
 
 @layer utilities {
@@ -214,14 +285,8 @@
   }
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .animate-fadeIn-delay-1 {
@@ -232,7 +297,6 @@
     animation: fadeIn 0.5s ease-out 0.3s both;
   }
 
-  /* Calculating state animation */
   .animate-pulse-subtle {
     animation: pulseSubtle 1.5s ease-in-out infinite;
   }
@@ -241,4 +305,4 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
   }
-} 
+}
