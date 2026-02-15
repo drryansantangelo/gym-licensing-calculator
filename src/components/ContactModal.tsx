@@ -54,6 +54,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     e.preventDefault();
     const newErrors = new Set<string>();
     if (!formData.firstName.trim()) newErrors.add('firstName');
+    if (!formData.lastName.trim()) newErrors.add('lastName');
     if (!formData.email.trim() || !formData.email.includes('@')) newErrors.add('email');
     if (!formData.phone.trim()) newErrors.add('phone');
     if (!formData.gymName.trim()) newErrors.add('gymName');
@@ -180,7 +181,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
-                    Last name
+                    Last name <span style={{ color: '#DC2626' }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -188,8 +189,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Smith"
-                    className="input-field w-full"
+                    className={`input-field w-full ${errors.has('lastName') ? 'border-red-500' : ''}`}
+                    required
                   />
+                  {errors.has('lastName') && (
+                    <p className="text-red-600 text-xs mt-1">Required</p>
+                  )}
                 </div>
               </div>
 
