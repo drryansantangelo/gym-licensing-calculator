@@ -1,4 +1,8 @@
-export default function LandingHero() {
+interface LandingHeroProps {
+  onTalkToSpecialist: () => void;
+}
+
+export default function LandingHero({ onTalkToSpecialist }: LandingHeroProps) {
   const scrollToCalculator = () => {
     const el = document.getElementById('calculator-section');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -36,18 +40,24 @@ export default function LandingHero() {
           </div>
 
           <h1
-            className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
+            className="text-4xl md:text-5xl font-bold mb-4 leading-tight"
             style={{ color: 'var(--dm-text-on-dark)' }}
           >
-            Calculate Your Gym's Music Licensing Cost in Under 60 Seconds
+            Are You Legally Covered to Play Music in Your Gym?
           </h1>
+
+          <p
+            className="text-xl font-semibold mb-4"
+            style={{ color: 'var(--dm-primary)' }}
+          >
+            Free 60-Second Licensing Cost Calculator
+          </p>
 
           <p
             className="text-lg mb-8"
             style={{ color: 'var(--dm-text-on-dark-muted)', lineHeight: '1.7' }}
           >
-            Find out exactly what licenses your gym needs and how much they cost.
-            Avoid unexpected royalty fines and get clear, accurate pricing based on your facility.
+            Instantly estimate what ASCAP, BMI, SESAC & GMR may require from your gym.
           </p>
 
           <ul className="space-y-3 mb-10">
@@ -72,9 +82,14 @@ export default function LandingHero() {
             ))}
           </ul>
 
-          <button onClick={scrollToCalculator} className="btn-primary btn-primary-lg">
-            Calculate My Licensing Cost
-          </button>
+          <div className="flex flex-wrap gap-4">
+            <button onClick={scrollToCalculator} className="btn-primary btn-primary-lg">
+              Calculate My Licensing Cost
+            </button>
+            <button onClick={onTalkToSpecialist} className="btn-outline btn-primary-lg">
+              Talk to a Specialist
+            </button>
+          </div>
         </div>
       </div>
     </section>

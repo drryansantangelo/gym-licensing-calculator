@@ -4,37 +4,37 @@ const faqs = [
   {
     question: 'I use Spotify at my gym. Isn\'t that legal?',
     answer:
-      'No. Consumer streaming services like Spotify, Apple Music, and YouTube are licensed for personal, non-commercial use only. Playing them in a business setting is a public performance under U.S. copyright law, and that requires separate commercial licensing. Dynamic Media provides fully licensed music specifically for business environments.',
+      'No. Consumer streaming services like Spotify, Apple Music, and YouTube are licensed for personal, non-commercial use only.\n\nPlaying music in a gym is considered a public performance under U.S. copyright law. Even if you pay for a premium subscription, it does not include commercial public performance rights.\n\nIf you play music in your facility, you must have proper business licensing.',
+  },
+  {
+    question: 'Why am I being contacted about music licensing now?',
+    answer:
+      'Performing Rights Organizations (PROs) such as ASCAP, BMI, SESAC, and GMR actively monitor and audit businesses for compliance.\n\nGyms are frequently contacted because music is played publicly, daily, and often at high volume. Many owners are unaware of the rules until they receive a letter or phone call.\n\nBeing contacted doesn\'t mean you did something intentionally wrong — it usually means you were unaware of how licensing works.',
   },
   {
     question: 'Has anyone actually been fined for playing unlicensed music?',
     answer:
-      'Yes. Performing Rights Organizations (PROs) actively audit businesses for compliance. Under the Copyright Act, statutory fines can reach $150,000 per song played without a license. Fitness facilities are a known enforcement target because of the high-volume, public nature of music use in gyms.',
+      'Yes.\n\nUnder the Copyright Act, statutory damages can reach up to $150,000 per song played without proper licensing.\n\nWhile most situations are resolved before reaching that level, enforcement is real — and gyms are a known target because music is central to the customer experience.',
+  },
+  {
+    question: 'What\'s the difference between background music and instructor-led class licensing?',
+    answer:
+      'Background music (lobby, gym floor, locker rooms) requires one category of licensing.\n\nInstructor-led classes — such as spin, HIIT, yoga, or group fitness — often require additional licensing, because music is a core part of the experience.\n\nMany gym owners are surprised to learn these are separate categories with different fee structures.',
   },
   {
     question: 'What is a PRO (Performing Rights Organization)?',
     answer:
-      'A PRO collects royalties on behalf of songwriters and music publishers. There are four in the U.S.: ASCAP, BMI, SESAC, and GMR. Each represents a different catalog of music. You can\'t pick just one — virtually every song has rights managed by one of these organizations, so full compliance requires coverage from all four.',
+      'A PRO collects royalties on behalf of songwriters and music publishers.\n\nThere are four major PROs in the United States: ASCAP, BMI, SESAC, and GMR.\n\nEach represents a different catalog of music. To be fully compliant, businesses typically need coverage across multiple organizations — which can mean multiple contracts and billing cycles when licensing directly.',
   },
   {
-    question: 'What\'s the difference between background music licensing and instructor-led class licensing?',
+    question: 'How does a $29.99/month subscription cover all of my licensing?',
     answer:
-      'Background music (lobby, gym floor, locker rooms) requires one type of license. Instructor-led classes where music is integral to the experience (spin, group fitness, yoga) require additional licensing. Most gym owners don\'t realize these are separate categories with different fees.',
-  },
-  {
-    question: 'How does a $29.99/mo subscription cover all of my licensing?',
-    answer:
-      'Dynamic Media is a licensed reseller of Soundtrack, a commercial music platform backed by Spotify. The subscription includes both the music platform and the public performance licensing for background music. The licensing isn\'t free — it\'s bundled into the subscription instead of requiring four separate PRO contracts.',
+      'Dynamic Media is a licensed reseller of Soundtrack — a commercial music platform backed by Spotify.\n\nInstead of signing four separate PRO contracts, licensing is consolidated into one subscription for background music. The public performance licensing is bundled into the plan — along with the music platform itself.\n\nYou\'re not avoiding licensing — you\'re simplifying it.',
   },
   {
     question: 'What music do I actually get?',
     answer:
-      'Soundtrack\'s library includes over 100 million tracks, backed by Spotify\'s catalog. You get curated playlists for fitness, the ability to create your own, import from Spotify, and set up different soundzones and schedules. It\'s not elevator music — it\'s the same songs your members listen to at home, properly licensed for business use.',
-  },
-  {
-    question: 'How accurate is this calculator?',
-    answer:
-      'Estimates are based on published rate schedules from ASCAP, BMI, SESAC, and GMR for the current year. Actual costs may vary slightly based on specific usage, class formats, and whether you qualify for association discounts. The calculator gives you a reliable baseline — a licensing specialist can confirm exact costs for free.',
+      'Soundtrack provides access to over 100 million licensed tracks, powered by a commercial platform built specifically for businesses.\n\nYou can: use professionally curated fitness playlists, create your own custom playlists, import Spotify playlists, set up multiple sound zones, and schedule music by time of day.\n\nIt\'s mainstream music your members already recognize — properly licensed for business use.',
   },
 ];
 
@@ -92,13 +92,16 @@ export default function FaqSection() {
                 </span>
               </button>
               {openIndex === index && (
-                <div className="px-6 pb-5 animate-fadeIn">
-                  <p
-                    className="text-sm"
-                    style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.8' }}
-                  >
-                    {faq.answer}
-                  </p>
+                <div className="px-6 pb-5 animate-fadeIn space-y-3">
+                  {faq.answer.split('\n\n').map((paragraph, pIndex) => (
+                    <p
+                      key={pIndex}
+                      className="text-sm"
+                      style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.8' }}
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
               )}
             </div>

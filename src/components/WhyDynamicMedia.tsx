@@ -1,34 +1,24 @@
 export default function WhyDynamicMedia() {
-  const features = [
+  const pillars = [
     {
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
         </svg>
       ),
-      title: 'Custom Playlists & Soundzones',
+      title: 'Fully Licensed Music Platform',
       description:
-        'Tailor playlists to workout zones, set automatic schedules to match energy levels, and incorporate branded messaging.',
+        '100M+ songs cleared for commercial use. No ads, no interruptions, no individual PRO contracts required.',
     },
     {
       icon: (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />
         </svg>
       ),
-      title: 'Multi-Location Control',
+      title: 'Custom Playlists & Zone Control',
       description:
-        'Manage music across all your gym locations — playlists, scheduling, and volume — from a single centralized portal.',
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
-      title: 'White Glove Service',
-      description:
-        'Installation made easy with thousands of licensed technicians, plus U.S.-based customer service for all your questions.',
+        'Create, schedule, and control music across workout zones — or legally import approved Spotify playlists.',
     },
     {
       icon: (
@@ -36,70 +26,112 @@ export default function WhyDynamicMedia() {
           <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
         </svg>
       ),
-      title: 'Music Drives Memberships',
+      title: 'AI-Powered Programming',
       description:
-        'The right music enhances member experience, extends workout time, and strengthens your gym\'s brand identity.',
+        'Smart stations that auto-refresh with new licensed music. Build by mood, genre, or artist in seconds.',
+    },
+    {
+      icon: (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />
+        </svg>
+      ),
+      title: 'Multi-Location Control & White-Glove Support',
+      description:
+        'Centralized management across all locations, backed by U.S.-based support and nationwide installation.',
+    },
+  ];
+
+  const trustedBrands = [
+    {
+      name: 'VASA Fitness',
+      logo: '/logos/vasa-fitness.png',
+      fallbackColor: '#1E40AF',
+      fallbackInitials: 'VF',
+    },
+    {
+      name: 'Club Pilates',
+      logo: '/logos/club-pilates.png',
+      fallbackColor: '#1E3A5F',
+      fallbackInitials: 'CP',
+    },
+    {
+      name: 'Powerhouse Gym',
+      logo: '/logos/powerhouse-gym.png',
+      fallbackColor: '#B91C1C',
+      fallbackInitials: 'PG',
     },
   ];
 
   return (
     <section className="section-light">
       <div className="container-dm">
-        <div className="text-center mb-12">
+        {/* Header */}
+        <div className="text-center mb-10">
           <span className="section-label">Why Dynamic Media</span>
-          <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--dm-text-primary)' }}>
-            Trusted by 55,000+ Businesses for Licensed Music
+          <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--dm-text-primary)' }}>
+            Trusted by 55,000+ Locations Nationwide
           </h2>
-          <p className="text-base max-w-2xl mx-auto" style={{ color: 'var(--dm-text-secondary)' }}>
-            Here's why gyms and fitness centers across the U.S. choose Dynamic Media for
-            their commercial music needs.
+          <p className="text-base max-w-xl mx-auto" style={{ color: 'var(--dm-text-secondary)' }}>
+            From boutique studios to regional chains — fully licensed commercial music, simplified.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {features.map((feature) => (
+        {/* Brand logos — clean trust bar */}
+        <div className="flex items-center justify-center gap-12 mb-14 flex-wrap">
+          {trustedBrands.map((brand) => (
             <div
-              key={feature.title}
-              className="flex gap-5 p-6 rounded-xl transition-all"
+              key={brand.name}
+              className="flex flex-col items-center gap-2"
+              style={{ opacity: 0.6 }}
+            >
+              <img
+                src={brand.logo}
+                alt={brand.name}
+                className="object-contain"
+                style={{ height: '40px', width: 'auto', maxWidth: '130px', filter: 'grayscale(100%)' }}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  target.style.display = 'none';
+                }}
+              />
+              <span
+                className="text-xs font-semibold uppercase tracking-wider"
+                style={{ color: 'var(--dm-text-muted)' }}
+              >
+                {brand.name}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* 4-pillar feature grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {pillars.map((pillar) => (
+            <div
+              key={pillar.title}
+              className="flex gap-4 p-5 rounded-xl"
               style={{
                 backgroundColor: 'var(--dm-bg)',
                 border: '1px solid var(--dm-border)',
               }}
             >
               <div
-                className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                className="flex-shrink-0 w-11 h-11 rounded-lg flex items-center justify-center"
                 style={{ backgroundColor: 'var(--dm-primary-light)', color: 'var(--dm-primary)' }}
               >
-                {feature.icon}
+                {pillar.icon}
               </div>
               <div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: 'var(--dm-text-primary)' }}>
-                  {feature.title}
+                <h3 className="text-base font-bold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+                  {pillar.title}
                 </h3>
-                <p className="text-sm" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.7' }}>
-                  {feature.description}
+                <p className="text-sm" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
+                  {pillar.description}
                 </p>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Gym imagery row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="rounded-xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
-            <img
-              src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80"
-              alt="Gym fitness environment"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="rounded-xl overflow-hidden" style={{ aspectRatio: '16/9' }}>
-            <img
-              src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=800&q=80"
-              alt="Commercial gym equipment"
-              className="w-full h-full object-cover"
-            />
-          </div>
         </div>
       </div>
     </section>

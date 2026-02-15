@@ -1,10 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { GymDetails, GymRoom } from '../types';
 
 const musicUseOptions = [
   { label: 'Background music', sublabel: 'Lobby, gym floor, locker rooms, common areas', value: 'ambient' as const },
   { label: 'Instructor-led classes', sublabel: 'Group fitness, spin, yoga, or any class with an instructor', value: 'group' as const },
 ];
+
+function Tooltip({ text }: { text: string }) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <span className="relative inline-flex ml-1" style={{ verticalAlign: 'middle' }}>
+      <span
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        onClick={() => setVisible(!visible)}
+        className="inline-flex items-center justify-center rounded-full cursor-help text-xs font-bold select-none"
+        style={{
+          width: '14px',
+          height: '14px',
+          fontSize: '9px',
+          backgroundColor: 'var(--dm-primary-light)',
+          color: 'var(--dm-primary)',
+          lineHeight: 1,
+        }}
+      >
+        i
+      </span>
+      {visible && (
+        <span
+          className="absolute z-50 rounded-lg px-3 py-2 text-xs font-normal shadow-lg"
+          style={{
+            bottom: 'calc(100% + 6px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '220px',
+            backgroundColor: 'var(--dm-bg-dark)',
+            color: 'var(--dm-text-on-dark)',
+            lineHeight: '1.5',
+            pointerEvents: 'none',
+          }}
+        >
+          {text}
+          <span
+            className="absolute"
+            style={{
+              top: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderTop: '5px solid var(--dm-bg-dark)',
+            }}
+          />
+        </span>
+      )}
+    </span>
+  );
+}
 
 interface InlineCalculatorProps {
   gymDetails: GymDetails;
@@ -16,6 +69,7 @@ interface InlineCalculatorProps {
   onAddRoom: () => void;
   onRemoveRoom: (index: number) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onReset: () => void;
 }
 
 export default function InlineCalculator({
@@ -28,23 +82,41 @@ export default function InlineCalculator({
   onAddRoom,
   onRemoveRoom,
   onSubmit,
+  onReset,
 }: InlineCalculatorProps) {
   return (
-    <section id="calculator-section" className="section-gray">
+    <section id="calculator-section" className="section-dark" style={{ paddingTop: '2.5rem' }}>
       <div className="container-dm">
-        <div className="text-center mb-10">
-          <span className="section-label">Free Calculator</span>
-          <h2 className="text-3xl font-bold mb-3" style={{ color: 'var(--dm-text-primary)' }}>
+        <div className="text-center mb-12">
+          <span className="section-label section-label-light">60-Second Licensing Calculator</span>
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-4"
+            style={{ color: 'var(--dm-text-on-dark)' }}
+          >
             What Does Your Gym Owe?
           </h2>
-          <p className="text-base max-w-xl mx-auto" style={{ color: 'var(--dm-text-secondary)' }}>
-            Answer a few questions about your gym and get an instant estimate based on
-            official PRO (Performing Rights Organization) rate schedules.
+          <p
+            className="text-base max-w-xl mx-auto mb-2"
+            style={{ color: 'var(--dm-text-on-dark-muted)' }}
+          >
+            Based on official PRO rate structures (ASCAP, BMI, SESAC & GMR).
+          </p>
+          <p
+            className="text-base max-w-xl mx-auto italic"
+            style={{ color: 'var(--dm-text-on-dark-muted)', opacity: 0.85 }}
+          >
+            Most gym owners are surprised by the total.
           </p>
         </div>
 
         <div className="container-narrow">
-          <form onSubmit={onSubmit} className="card card-elevated p-8">
+          <form
+            onSubmit={onSubmit}
+            className="card card-elevated p-8"
+            style={{
+              boxShadow: '0 8px 40px rgba(0, 0, 0, 0.3), 0 0 80px rgba(0, 174, 239, 0.08)',
+            }}
+          >
             <div className="grid grid-cols-1 gap-5">
               {/* Music type selection */}
               <div>
@@ -96,6 +168,7 @@ export default function InlineCalculator({
                       <div>
                         <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
                           Locations <span style={{ color: '#DC2626' }}>*</span>
+                          <Tooltip text="How many separate gym locations do you operate? Each location requires its own set of licenses." />
                         </label>
                         <input
                           type="number"
@@ -116,6 +189,7 @@ export default function InlineCalculator({
                       <div>
                         <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
                           Members <span style={{ color: '#DC2626' }}>*</span>
+                          <Tooltip text="Your total active membership count. BMI calculates fees on a per-member basis." />
                         </label>
                         <input
                           type="number"
@@ -137,6 +211,7 @@ export default function InlineCalculator({
                         <div className="animate-fadeIn">
                           <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--dm-text-primary)' }}>
                             Sq. Footage <span style={{ color: '#DC2626' }}>*</span>
+                            <Tooltip text="Total square footage where music is played — ASCAP uses this for ambient licensing." />
                           </label>
                           <input
                             type="number"
@@ -180,7 +255,10 @@ export default function InlineCalculator({
                                   onChange={(e) => onRoomChange(index, 'classesPerWeek', e.target.value)}
                                   className={`input-field w-20 ${validationErrors.has(`room-${index}-classesPerWeek`) ? 'border-red-500' : ''}`}
                                 />
-                                <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>classes/week</span>
+                                <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>
+                                  classes/week
+                                  <Tooltip text="Total instructor-led classes held in this room per week, including spin, yoga, HIIT, etc." />
+                                </span>
                               </div>
                               <div className="flex-1 flex items-center gap-2">
                                 <input
@@ -192,7 +270,10 @@ export default function InlineCalculator({
                                   onChange={(e) => onRoomChange(index, 'classCapacity', e.target.value)}
                                   className={`input-field w-20 ${validationErrors.has(`room-${index}-classCapacity`) ? 'border-red-500' : ''}`}
                                 />
-                                <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>capacity</span>
+                                <span className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>
+                                  capacity
+                                  <Tooltip text="Maximum number of participants per class in this room." />
+                                </span>
                               </div>
                               {rooms.length > 1 && (
                                 <button
@@ -225,17 +306,37 @@ export default function InlineCalculator({
               )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-8">
               <button
                 type="submit"
                 disabled={isCalculating}
-                className="btn-primary btn-primary-lg w-full"
+                className="btn-primary w-full font-bold text-lg"
+                style={{
+                  padding: '18px 32px',
+                  borderRadius: 'var(--dm-radius-lg)',
+                  boxShadow: '0 4px 20px rgba(0, 174, 239, 0.35)',
+                }}
               >
                 {isCalculating ? 'Calculating...' : 'Calculate My Licensing Cost'}
               </button>
-              <p className="text-xs text-center mt-3" style={{ color: 'var(--dm-text-muted)' }}>
-                Based on official PRO rate schedules. No account required.
-              </p>
+              <div className="text-center mt-4 space-y-2">
+                <p className="text-xs" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+                  Based on official PRO rate schedules. No account required.
+                </p>
+                <p className="text-xs" style={{ color: 'var(--dm-text-on-dark-muted)', opacity: 0.7 }}>
+                  Estimates are conservative. Actual exposure may be higher depending on class usage.
+                </p>
+                {gymDetails.musicUseTypes.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={onReset}
+                    className="text-xs font-medium transition-colors hover:underline mx-auto block"
+                    style={{ color: 'var(--dm-primary)', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0' }}
+                  >
+                    Reset Calculator
+                  </button>
+                )}
+              </div>
             </div>
           </form>
         </div>

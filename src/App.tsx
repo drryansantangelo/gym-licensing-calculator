@@ -9,10 +9,12 @@ import ComplianceEducation from './components/ComplianceEducation';
 import LicensingExplainer from './components/LicensingExplainer';
 import InlineCalculator from './components/InlineCalculator';
 import CalculatorResults from './components/CalculatorResults';
-import LeadMagnet from './components/LeadMagnet';
+// import LeadMagnet from './components/LeadMagnet';
 import WhyDynamicMedia from './components/WhyDynamicMedia';
 import FaqSection from './components/FaqSection';
 import FinalCta from './components/FinalCta';
+import ContactModal from './components/ContactModal';
+import ProContactBlock from './components/ProContactBlock';
 
 const sanitizeInt = (v: string) => (v ? String(parseInt(v, 10) || '') : '');
 
@@ -39,6 +41,7 @@ function App() {
     dynamicMediaInstructed: ScenarioResult;
   } | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   // --- Form handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,15 +157,29 @@ function App() {
     }, 800);
   };
 
+  const handleReset = () => {
+    setGymDetails(initialGymDetails);
+    setRooms([]);
+    setFees([]);
+    setShowResults(false);
+    setScenarios(null);
+    setValidationErrors(new Set());
+    setHasAttemptedSubmit(false);
+    setIsCalculating(false);
+  };
+
   // --- CTA handlers ---
-  const handleGetQuote = () => {
-    window.location.href = 'https://dynamicmediamusic.com/consultation';
+  const handleOpenContact = () => {
+    setIsContactModalOpen(true);
   };
 
   return (
     <div>
       {/* Section 1: Hero */}
-      <LandingHero />
+      <LandingHero onTalkToSpecialist={handleOpenContact} />
+
+      {/* Section 1.5: Have You Been Contacted? */}
+      <ProContactBlock />
 
       {/* Section 2: Compliance Education */}
       <ComplianceEducation />
@@ -181,6 +198,7 @@ function App() {
         onAddRoom={handleAddRoom}
         onRemoveRoom={handleRemoveRoom}
         onSubmit={handleSubmit}
+        onReset={handleReset}
       />
 
       {/* Calculating state */}
@@ -208,23 +226,28 @@ function App() {
         <div id="results-section">
           <CalculatorResults
             scenario={scenarios.baseline}
+            dmScenario={
+              gymDetails.musicUseTypes.includes('group')
+                ? scenarios.dynamicMediaInstructed
+                : scenarios.dynamicMediaAmbient
+            }
             gymDetails={gymDetails}
-            onGetQuote={handleGetQuote}
+            onGetQuote={handleOpenContact}
           />
         </div>
       )}
 
-      {/* Section 6: Lead Magnet */}
-      <LeadMagnet />
-
-      {/* Section 7: Why Dynamic Media */}
+      {/* Section 6: Why Dynamic Media */}
       <WhyDynamicMedia />
 
-      {/* Section 8: FAQ */}
+      {/* Section 7: FAQ */}
       <FaqSection />
 
-      {/* Section 9: Final CTA + Footer */}
-      <FinalCta />
+      {/* Section 8: Final CTA + Footer */}
+      <FinalCta onTalkToSpecialist={handleOpenContact} />
+
+      {/* Contact Modal */}
+      <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
     </div>
   );
 }

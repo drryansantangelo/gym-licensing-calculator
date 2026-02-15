@@ -8,7 +8,7 @@ export default function LeadMagnet() {
     e.preventDefault();
     if (!email || !email.includes('@')) return;
     // TODO: Wire to HubSpot or email service
-    console.log('Handbook download requested:', email);
+    console.log('Compliance guide download requested:', email);
     setSubmitted(true);
   };
 
@@ -72,7 +72,7 @@ export default function LeadMagnet() {
                     className="text-xl font-bold mb-2 leading-tight"
                     style={{ color: 'var(--dm-text-primary)' }}
                   >
-                    The Gym Music Licensing Handbook
+                    Gym Compliance Guide
                   </h3>
 
                   <p
@@ -134,7 +134,7 @@ export default function LeadMagnet() {
             </span>
 
             <h2 className="text-3xl font-bold mb-4" style={{ color: 'white' }}>
-              The Gym Music Licensing Handbook
+              Gym Compliance Guide (Free PDF)
             </h2>
 
             <p className="text-base mb-3" style={{ color: 'rgba(255, 255, 255, 0.85)', lineHeight: '1.7' }}>
@@ -158,7 +158,7 @@ export default function LeadMagnet() {
                 >
                   <span className="text-white text-lg">✓</span>
                   <p className="text-sm font-medium" style={{ color: 'white' }}>
-                    Check your inbox — we've sent the handbook to {email}
+                    Check your inbox — we've sent the guide to {email}
                   </p>
                 </div>
               </div>
@@ -193,7 +193,7 @@ export default function LeadMagnet() {
                       <polyline points="7 10 12 15 17 10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
-                    Download Free Handbook
+                    Download Free Guide
                   </button>
                 </div>
                 <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>

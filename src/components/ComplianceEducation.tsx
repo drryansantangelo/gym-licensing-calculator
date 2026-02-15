@@ -40,12 +40,10 @@ export default function ComplianceEducation() {
             Consumer Music Services Are Not Licensed for Gyms
           </h2>
           <p
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: 'var(--dm-text-on-dark-muted)', lineHeight: '1.7' }}
+            className="text-lg max-w-2xl mx-auto font-semibold"
+            style={{ color: 'var(--dm-text-on-dark)', lineHeight: '1.7' }}
           >
-            Spotify, Apple Music, YouTube, and every other consumer music app explicitly
-            prohibit commercial use in their terms of service. Playing them in your gym
-            is a copyright violation — no exceptions.
+            Your business — not your instructor — is legally responsible for music compliance.
           </p>
         </div>
 
@@ -86,25 +84,34 @@ export default function ComplianceEducation() {
 
         {/* Bottom line callout */}
         <div
-          className="rounded-xl p-6 text-center max-w-3xl mx-auto"
+          className="rounded-xl overflow-hidden max-w-3xl mx-auto flex"
           style={{
-            background: 'linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(248, 113, 113, 0.05) 100%)',
-            border: '1px solid rgba(248, 113, 113, 0.3)',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
           }}
         >
-          <p
-            className="text-lg font-bold mb-2"
-            style={{ color: 'var(--dm-text-on-dark)' }}
-          >
-            There is no consumer music service that is legal to play in a gym.
-          </p>
-          <p className="text-base mb-5" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
-            PROs actively enforce copyright law against businesses. Fines can reach{' '}
-            <strong style={{ color: '#FBBF24' }}>$150,000 per song</strong> played without a license.
-          </p>
-          <button onClick={scrollToCalculator} className="btn-primary">
-            Find Out What Your Gym Owes
-          </button>
+          {/* Amber left accent */}
+          <div
+            className="flex-shrink-0"
+            style={{ width: '4px', backgroundColor: '#FBBF24' }}
+          />
+          <div className="p-6 text-center w-full">
+            <p
+              className="text-lg font-bold mb-3"
+              style={{ color: 'var(--dm-text-on-dark)' }}
+            >
+              There is no consumer streaming service that is legal to play in a gym.
+            </p>
+            <p className="text-sm mb-2" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+              ASCAP, BMI, SESAC, and GMR actively enforce copyright law for businesses.
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+              Civil penalties can reach up to{' '}
+              <strong style={{ color: '#FBBF24' }}>$30,000 per song</strong> played without proper licensing.
+            </p>
+            <button onClick={scrollToCalculator} className="btn-primary">
+              Calculate Your Licensing Cost
+            </button>
+          </div>
         </div>
       </div>
     </section>

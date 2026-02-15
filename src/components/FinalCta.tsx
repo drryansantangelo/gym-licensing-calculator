@@ -1,38 +1,38 @@
-export default function FinalCta() {
+interface FinalCtaProps {
+  onTalkToSpecialist: () => void;
+}
+
+export default function FinalCta({ onTalkToSpecialist }: FinalCtaProps) {
   const scrollToCalculator = () => {
     const el = document.getElementById('calculator-section');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const handleContactSpecialist = () => {
-    window.location.href = 'https://dynamicmediamusic.com/contact';
   };
 
   return (
     <section className="section-dark">
       <div className="container-dm text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: 'var(--dm-text-on-dark)' }}>
-          Get Your Free Music Licensing Cost Estimate
+          Ready to Resolve Your Licensing Risk?
         </h2>
         <p
           className="text-lg mb-10 max-w-2xl mx-auto"
           style={{ color: 'var(--dm-text-on-dark-muted)', lineHeight: '1.7' }}
         >
-          Use our calculator to understand your licensing needs and avoid costly surprises.
-          Or talk to a specialist who can walk you through everything.
+          Whether you've been contacted by a PRO or just want to make sure you're covered,
+          our team can walk you through everything — no pressure, no commitment.
         </p>
 
         <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <button onClick={scrollToCalculator} className="btn-primary btn-primary-lg">
-            Calculate My Licensing Cost
-          </button>
-          <button onClick={handleContactSpecialist} className="btn-outline btn-primary-lg">
+          <button onClick={onTalkToSpecialist} className="btn-primary btn-primary-lg">
             Talk to a Licensing Specialist
+          </button>
+          <button onClick={scrollToCalculator} className="btn-outline btn-primary-lg">
+            Check My Exposure Again
           </button>
         </div>
 
         <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
-          Free consultation · No pressure · No commitment
+          Free consultation · No pressure · Response within 1 business day
         </p>
       </div>
 
