@@ -112,8 +112,9 @@ export default function InlineCalculator({
         <div className="container-narrow">
           <form
             onSubmit={onSubmit}
-            className="card card-elevated p-8"
+            className="card card-elevated"
             style={{
+              padding: '2rem 2rem 1.25rem 2rem',
               boxShadow: '0 8px 40px rgba(0, 0, 0, 0.3), 0 0 80px rgba(0, 174, 239, 0.08)',
             }}
           >
@@ -306,7 +307,7 @@ export default function InlineCalculator({
               )}
             </div>
 
-            <div className="mt-8">
+            <div className="mt-5">
               <button
                 type="submit"
                 disabled={isCalculating}
@@ -319,24 +320,19 @@ export default function InlineCalculator({
               >
                 {isCalculating ? 'Calculating...' : 'Calculate My Licensing Cost'}
               </button>
-              <div className="text-center mt-4 space-y-2">
-                <p className="text-xs" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
-                  Based on official PRO rate schedules. No account required.
-                </p>
-                <p className="text-xs" style={{ color: 'var(--dm-text-on-dark-muted)', opacity: 0.7 }}>
-                  Estimates are conservative. Actual exposure may be higher depending on class usage.
-                </p>
-                {gymDetails.musicUseTypes.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={onReset}
-                    className="text-xs font-medium transition-colors hover:underline mx-auto block"
-                    style={{ color: 'var(--dm-primary)', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0' }}
-                  >
-                    Reset Calculator
-                  </button>
-                )}
-              </div>
+              {gymDetails.musicUseTypes.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onReset}
+                  className="text-xs font-medium transition-colors hover:underline mx-auto block mt-2"
+                  style={{ color: 'var(--dm-primary)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                >
+                  Reset Calculator
+                </button>
+              )}
+              <p className="text-xs text-center mt-3" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+                Based on official PRO rate schedules. No account required.
+              </p>
             </div>
           </form>
         </div>
