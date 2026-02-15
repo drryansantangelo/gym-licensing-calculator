@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmitSuccess?: () => void;
 }
 
-export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
+export default function ContactModal({ isOpen, onClose, onSubmitSuccess }: ContactModalProps) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -64,6 +65,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     // TODO: Wire to HubSpot Forms API
     console.log('Contact form submitted:', formData);
     setSubmitted(true);
+    onSubmitSuccess?.();
   };
 
   const handleClose = () => {

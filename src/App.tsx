@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { calculateTotalFees } from './utils/calculateFees';
 import { calculateAllScenarios, type ScenarioResult } from './utils/calculateScenarios';
 import type { GymDetails, GymRoom, LicenseFee, MusicUseType } from './types';
+import { useExitIntent } from './hooks/useExitIntent';
 
 // Landing page sections
 import LandingHero from './components/LandingHero';
@@ -15,6 +16,9 @@ import FaqSection from './components/FaqSection';
 import FinalCta from './components/FinalCta';
 import ContactModal from './components/ContactModal';
 import ProContactBlock from './components/ProContactBlock';
+
+// Lazy load exit intent modal (not needed on initial render)
+const ExitIntentModal = lazy(() => import('./components/ExitIntentModal'));
 
 const sanitizeInt = (v: string) => (v ? String(parseInt(v, 10) || '') : '');
 
@@ -42,6 +46,16 @@ function App() {
   } | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [hasSubmittedAnyForm, setHasSubmittedAnyForm] = useState(false);
+
+  // Exit intent: suppress when calculator has inputs, a form was submitted, or another modal is open
+  const isCalculatorActive = gymDetails.musicUseTypes.length > 0;
+  useExitIntent(() => setIsExitModalOpen(true), {
+    hasSubmittedForm: hasSubmittedAnyForm,
+    isCalculatorActive,
+    isOtherModalOpen: isContactModalOpen,
+  });
 
   // --- Form handlers ---
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,7 +261,19 @@ function App() {
       <FinalCta onTalkToSpecialist={handleOpenContact} />
 
       {/* Contact Modal */}
-      <ContactModal isOpen={isContactModalOpen} onClose={() => setIsContactModalOpen(false)} />
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        onSubmitSuccess={() => setHasSubmittedAnyForm(true)}
+      />
+
+      {/* Exit Intent Modal (lazy loaded) */}
+      <Suspense fallback={null}>
+        <ExitIntentModal
+          isOpen={isExitModalOpen}
+          onClose={() => setIsExitModalOpen(false)}
+        />
+      </Suspense>
     </div>
   );
 }
