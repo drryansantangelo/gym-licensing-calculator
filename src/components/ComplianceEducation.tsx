@@ -106,7 +106,7 @@ export default function ComplianceEducation() {
             </p>
             <p className="text-sm mb-5" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
               Civil penalties can reach up to{' '}
-              <strong style={{ color: '#FBBF24' }}>$30,000 per song</strong> played without proper licensing.
+              <strong style={{ color: '#FBBF24' }}>$150,000 per song</strong> played without proper licensing.
             </p>
             <button onClick={scrollToCalculator} className="btn-primary">
               Calculate Your Licensing Cost
