@@ -33,7 +33,7 @@ export function calculateBaselineScenario(gymDetails: GymDetails): ScenarioResul
 
   const hasInstructorLed = gymDetails.musicUseTypes.includes('group');
 
-  let description = 'This is what gyms typically pay when licensing directly through each PRO (ASCAP, BMI, SESAC, GMR) and sourcing their own music. This is for educational comparison only.';
+  let description = 'This is your estimated annual licensing exposure when licensing directly through each PRO (ASCAP, BMI, SESAC, GMR) and sourcing your own music. This is for educational comparison only.';
   
   if (hasInstructorLed) {
     description += ' Includes instructor-led group fitness licensing costs.';

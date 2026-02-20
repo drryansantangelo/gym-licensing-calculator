@@ -1,0 +1,119 @@
+export default function ComplianceEducation() {
+  const scrollToCalculator = () => {
+    const el = document.getElementById('calculator-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const platforms = [
+    {
+      name: 'Spotify',
+      quote:
+        'We grant to you limited, non-exclusive, revocable permission to make personal, non-commercial use of the Spotify Service.',
+      source: 'Spotify Terms of Service',
+      verdict: 'Not licensed for business use.',
+    },
+    {
+      name: 'Apple Music',
+      quote:
+        'You may use the Services and Content only for personal, noncommercial purposes.',
+      source: 'Apple Media Services Terms',
+      verdict: 'Not licensed for business use.',
+    },
+    {
+      name: 'YouTube',
+      quote:
+        'You may access and use the Service as made available to you, as long as you comply with this Agreement. You may view or listen to Content for your personal, non-commercial use.',
+      source: 'YouTube Terms of Service',
+      verdict: 'Not licensed for business use.',
+    },
+  ];
+
+  return (
+    <section className="section-dark">
+      <div className="container-dm">
+        <div className="text-center mb-12">
+          <span className="section-label section-label-light">The Problem</span>
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-4"
+            style={{ color: 'var(--dm-text-on-dark)' }}
+          >
+            Consumer Music Services Are Not Licensed for Gyms
+          </h2>
+          <p
+            className="text-lg max-w-2xl mx-auto font-semibold"
+            style={{ color: 'var(--dm-text-on-dark)', lineHeight: '1.7' }}
+          >
+            Your business — not your instructor — is legally responsible for music compliance.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {platforms.map((platform) => (
+            <div
+              key={platform.name}
+              className="rounded-xl p-6"
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <h3
+                className="text-xl font-bold mb-4"
+                style={{ color: 'var(--dm-text-on-dark)' }}
+              >
+                {platform.name}
+              </h3>
+              <p
+                className="text-sm italic mb-3"
+                style={{ color: 'var(--dm-text-on-dark-muted)', lineHeight: '1.7' }}
+              >
+                "{platform.quote}"
+              </p>
+              <p className="text-xs mb-3" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                — {platform.source}
+              </p>
+              <p
+                className="text-sm font-bold"
+                style={{ color: '#F87171' }}
+              >
+                ✕ {platform.verdict}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom line callout */}
+        <div
+          className="rounded-xl overflow-hidden max-w-3xl mx-auto flex"
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          {/* Amber left accent */}
+          <div
+            className="flex-shrink-0"
+            style={{ width: '4px', backgroundColor: '#FBBF24' }}
+          />
+          <div className="p-6 text-center w-full">
+            <p
+              className="text-lg font-bold mb-3"
+              style={{ color: 'var(--dm-text-on-dark)' }}
+            >
+              There is no consumer streaming service that is legal to play in a gym.
+            </p>
+            <p className="text-sm mb-2" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+              ASCAP, BMI, SESAC, and GMR actively enforce copyright law for businesses.
+            </p>
+            <p className="text-sm mb-5" style={{ color: 'var(--dm-text-on-dark-muted)' }}>
+              Civil penalties can reach up to{' '}
+              <strong style={{ color: '#FBBF24' }}>$150,000 per song</strong> played without proper licensing.
+            </p>
+            <button onClick={scrollToCalculator} className="btn-primary">
+              Calculate Your Licensing Cost
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

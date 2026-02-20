@@ -1,120 +1,197 @@
-import React from 'react';
+// RecommendedSetupPanel component
+import type { ScenarioResult } from '../utils/calculateScenarios';
+import type { GymDetails } from '../types';
+import EmailResultsCapture from './EmailResultsCapture';
 
 interface RecommendedSetupPanelProps {
   hasInstructorLed: boolean;
   instructorLedCost?: number;
+  baselineCost: number;
+  scenario: ScenarioResult;
+  gymDetails: GymDetails;
   onConfirmReview: () => void;
+  onContactSpecialist?: () => void;
 }
 
 export default function RecommendedSetupPanel({ 
   hasInstructorLed,
   instructorLedCost,
-  onConfirmReview
+  baselineCost,
+  scenario,
+  gymDetails,
+  onConfirmReview,
+  onContactSpecialist
 }: RecommendedSetupPanelProps) {
   const monthlyPrice = 29.99;
   const annualPrice = monthlyPrice * 12;
 
-  return (
-    <div className="rounded-lg p-8 mt-6 animate-fadeIn" style={{ backgroundColor: 'var(--dm-primary-light)', border: '2px solid var(--dm-primary)', boxShadow: 'var(--dm-shadow-lg)' }}>
-      <h3 className="text-2xl font-bold mb-4" style={{ color: 'var(--dm-text-primary)' }}>
-        Recommended setup for your gym
-      </h3>
-      
-      <p className="text-base mb-8" style={{ color: 'var(--dm-text-secondary)' }}>
-        Based on your inputs, here's the simplest compliant path.
-      </p>
+  // Calculate total DM cost and savings
+  const totalDmAnnual = annualPrice + (hasInstructorLed && instructorLedCost ? instructorLedCost : 0);
+  const estimatedSavings = Math.max(0, baselineCost - totalDmAnnual);
 
-      <div className="card p-6 mb-8">
-        {/* Ambient Music Section - Primary */}
-        <div className="pb-8 mb-8" style={{ borderBottom: '2px solid var(--dm-border)' }}>
-          <div className="flex justify-between items-baseline mb-3">
-            <h3 className="text-xl font-bold" style={{ color: 'var(--dm-text-primary)' }}>
-              Ambient (Background) Music — Fully Covered
-            </h3>
-            <div className="text-right">
-              <div className="text-2xl font-bold" style={{ color: 'var(--dm-text-primary)' }}>
-                ${monthlyPrice}/month
-              </div>
-              <div className="text-xs mt-1" style={{ color: 'var(--dm-text-muted)' }}>
-                month to month, no long-term contracts
-              </div>
-            </div>
-          </div>
-          
-          <p className="text-lg font-semibold mb-4" style={{ color: 'var(--dm-text-primary)', lineHeight: '1.5' }}>
-            This subscription covers everything you need for background music.
-          </p>
-          
-          <p className="text-base" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
-            The Dynamic Media subscription covers all ambient music licensing — no separate PRO contracts, no paperwork, no reporting required from you. Includes full commercial music platform (Soundtrack, backed by Spotify).
-          </p>
+  return (
+    <div className="animate-fadeIn" style={{ outline: 'none' }}>
+      <div className="rounded-lg p-6 mb-5" style={{ backgroundColor: 'var(--dm-primary-light)', border: '2px solid var(--dm-primary)', boxShadow: 'var(--dm-shadow-lg)' }}>
+        {/* Step indicator */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold text-white" style={{ backgroundColor: 'var(--dm-primary)' }}>3</span>
+          <span className="text-xs font-semibold" style={{ color: 'var(--dm-text-muted)' }}>Your Dynamic Media setup</span>
         </div>
 
-        {/* Instructor-Led Section - Only show if instructor-led classes selected */}
-        {hasInstructorLed && (
-          <div className="pb-8 mb-8" style={{ borderBottom: '1px solid var(--dm-border)' }}>
-            <h4 className="text-lg font-semibold mb-4" style={{ color: 'var(--dm-text-primary)' }}>
-              Instructor-Led Fitness Classes — Additional Licensing Required
-            </h4>
-            
-            <p className="text-base mb-3" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
-              For instructor-led fitness classes, you need to contract directly with the licensing organizations.
-            </p>
-            
-            {instructorLedCost && instructorLedCost > 0 && (
-              <p className="text-base mb-4" style={{ color: 'var(--dm-text-primary)', lineHeight: '1.6' }}>
-                Your estimated direct licensing cost, based on your inputs, would be approximately <strong>${instructorLedCost.toFixed(0)}/year</strong>.
-              </p>
-            )}
-            
-            <p className="text-base mb-4" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
-              You can still use the Dynamic Media platform (Soundtrack, backed by Spotify) for your classes.
-            </p>
-            
-            <div className="rounded-lg px-4 py-3" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
-              <p className="text-sm font-semibold mb-2" style={{ color: 'var(--dm-text-primary)' }}>
-                Platform benefits:
-              </p>
-              <ul className="text-sm space-y-1" style={{ color: 'var(--dm-text-secondary)' }}>
-                <li>• Custom playlists and song-by-song control available</li>
-                <li>• Fully licensed for business use</li>
-                <li>• We guide you through the licensing requirements</li>
-              </ul>
-            </div>
-          </div>
-        )}
+        <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--dm-text-primary)' }}>
+          Here's what your plan looks like
+        </h3>
+        
+        <p className="text-sm mb-6" style={{ color: 'var(--dm-text-secondary)' }}>
+          Based on your gym's details, here's everything you'd get — music platform, licensing, and compliance — in one setup.
+        </p>
 
-        {/* What's Included - Supporting Details */}
-        <div className="pt-2">
-          <div className="text-base font-semibold mb-4" style={{ color: 'var(--dm-text-primary)' }}>What's included:</div>
-          <ul className="space-y-2.5">
-            <li className="text-base flex items-start gap-3" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
-              <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
-              <span>Unlimited commercial music for your facility via Soundtrack (backed by Spotify)</span>
-            </li>
-            <li className="text-base flex items-start gap-3" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
-              <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
-              <span>Ambient music licensing handled through the platform</span>
-            </li>
-            <li className="text-base flex items-start gap-3" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
-              <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
-              <span>Expert guidance on compliance and coverage</span>
-            </li>
-          </ul>
+        <div className="card p-6 mb-5">
+          {/* Ambient Music Section - Primary */}
+          <div className={hasInstructorLed ? "pb-6 mb-6" : ""} style={hasInstructorLed ? { borderBottom: '2px solid var(--dm-border)' } : {}}>
+            <div className="flex items-start justify-between mb-1 gap-4">
+              <h3 className="text-lg font-bold" style={{ color: 'var(--dm-text-primary)' }}>
+                Soundtrack by Dynamic Media
+              </h3>
+              <div className="flex-shrink-0 text-right">
+                <span className="text-xs" style={{ color: 'var(--dm-text-muted)' }}>starting at </span>
+                <span className="text-xl font-bold" style={{ color: 'var(--dm-text-primary)' }}>
+                  ${monthlyPrice}/mo
+                </span>
+              </div>
+            </div>
+            <p className="text-xs mb-4" style={{ color: 'var(--dm-text-muted)', letterSpacing: '0.02em' }}>
+              per location · month to month · cancel anytime
+            </p>
+            
+            <p className="text-sm font-medium mb-5" style={{ color: 'var(--dm-text-primary)', lineHeight: '1.6' }}>
+              Background music — fully covered. One subscription includes your music platform and all licensing.
+            </p>
+            
+            <div className="space-y-2.5 mb-5">
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+                <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
+                <span>ASCAP, BMI, SESAC & GMR licensing included — no separate contracts</span>
+              </p>
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+                <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
+                <span>Backed by Spotify — 100M+ tracks, curated playlists for fitness</span>
+              </p>
+              <p className="text-sm flex items-start gap-2.5" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+                <span className="font-bold mt-0.5" style={{ color: 'var(--dm-primary)' }}>✓</span>
+                <span>Soundzones, scheduled playlists, multi-location control</span>
+              </p>
+            </div>
+
+            <p className="text-xs pt-4" style={{ color: 'var(--dm-text-muted)', borderTop: '1px solid var(--dm-border)' }}>
+              No paperwork. No reporting. Fully covered from day one.
+            </p>
+          </div>
+
+          {/* Instructor-Led Section */}
+          {hasInstructorLed && (
+            <div className="pb-6 mb-6" style={{ borderBottom: '1px solid var(--dm-border)' }}>
+              <h4 className="text-base font-semibold mb-2" style={{ color: 'var(--dm-text-primary)' }}>
+                Instructor-Led Classes — We'll Guide You
+              </h4>
+              
+              <p className="text-sm mb-4" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.6' }}>
+                Instructor-led classes require additional licensing regardless of platform. We'll walk you through exactly what's needed.
+              </p>
+              
+              {instructorLedCost && instructorLedCost > 0 && (
+                <div className="rounded-lg px-4 py-3 mb-4" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
+                  <p className="text-sm" style={{ color: 'var(--dm-text-secondary)' }}>
+                    Estimated cost: <strong style={{ color: 'var(--dm-text-primary)' }}>${instructorLedCost.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/year</strong>
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: 'var(--dm-text-muted)' }}>
+                    Depends on class format and frequency. We'll confirm the exact amount.
+                  </p>
+                </div>
+              )}
+              
+              <div className="space-y-1.5">
+                <p className="text-xs flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)' }}>
+                  <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
+                  <span>Same music platform for classes — custom playlists, Spotify imports</span>
+                </p>
+                <p className="text-xs flex items-start gap-2" style={{ color: 'var(--dm-text-secondary)' }}>
+                  <span className="font-bold" style={{ color: 'var(--dm-primary)' }}>✓</span>
+                  <span>We navigate PRO requirements so you don't overpay</span>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Savings Summary — brand-consistent blue instead of green */}
+          {estimatedSavings > 100 && (
+            <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--dm-primary-light)', border: '1px solid rgba(0, 174, 239, 0.25)' }}>
+              <p className="text-lg font-bold" style={{ color: 'var(--dm-text-primary)' }}>
+                Save ~${estimatedSavings.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}/year
+              </p>
+              <p className="text-xs mt-1" style={{ color: 'var(--dm-text-secondary)' }}>
+                vs. licensing directly — plus a full commercial music platform included
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Trust Signal */}
+        <p className="text-xs text-center mb-5 font-medium" style={{ color: 'var(--dm-text-muted)' }}>
+          Trusted by 55,000+ businesses · Licensed reseller of Sirius XM for Business and Soundtrack
+        </p>
+
+        {/* Primary CTA */}
+        <button
+          onClick={onConfirmReview}
+          className="btn-primary w-full text-base"
+        >
+          Get Your Custom Quote — Free
+        </button>
+        
+        <p className="text-xs text-center mt-3" style={{ color: 'var(--dm-text-secondary)' }}>
+          A licensing specialist will review your setup and confirm exact costs. No commitment.
+        </p>
+
+        {/* Alternative: email results for later */}
+        <div className="mt-5 pt-5" style={{ borderTop: '1px solid rgba(0, 174, 239, 0.2)' }}>
+          <p className="text-xs text-center mb-3" style={{ color: 'var(--dm-text-muted)' }}>
+            Not ready yet? Send yourself a copy to review later.
+          </p>
+          <EmailResultsCapture scenario={scenario} gymDetails={gymDetails} />
         </div>
       </div>
 
-      {/* CTA */}
-      <button
-        onClick={onConfirmReview}
-        className="btn-primary w-full text-lg"
-      >
-        Get My Custom Setup & Quote
-      </button>
-      
-      <p className="text-sm text-center mt-4" style={{ color: 'var(--dm-text-secondary)' }}>
-        We'll create a personalized plan based on your gym's specific needs
-      </p>
+      {/* Reassurance section — merged from former Block 4 */}
+      <div className="rounded-lg p-5" style={{ backgroundColor: 'var(--dm-bg)', border: '1px solid var(--dm-border)' }}>
+        {/* Urgency / consequence framing */}
+        <div className="rounded-lg p-3 mb-4" style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A' }}>
+          <p className="text-xs font-medium" style={{ color: '#92400E', lineHeight: '1.5' }}>
+            <strong>Worth knowing:</strong> PROs actively audit businesses for compliance. 
+            Fines can reach $150,000 per song played without a license. Most gym owners don't realize 
+            they're at risk until they receive a letter.
+          </p>
+        </div>
+
+        <p className="text-sm font-semibold text-center mb-1" style={{ color: 'var(--dm-text-primary)' }}>
+          Not sure what your gym needs?
+        </p>
+        <p className="text-sm text-center mb-4" style={{ color: 'var(--dm-text-secondary)', lineHeight: '1.5' }}>
+          Our specialists have helped thousands of gyms get properly covered — and they'll tell you honestly if you don't need something.
+        </p>
+        
+        <div className="text-center">
+          <button
+            onClick={onContactSpecialist}
+            className="btn-primary text-sm"
+          >
+            Talk to a Licensing Specialist
+          </button>
+          <p className="text-xs mt-2" style={{ color: 'var(--dm-text-muted)' }}>
+            Free consultation · No pressure
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
